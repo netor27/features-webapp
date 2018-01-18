@@ -128,9 +128,9 @@ class Feature(db.Model, AddUpdateDelete):
 
     # Relationships
     client_id = db.Column(db.Integer, db.ForeignKey('client.id', ondelete='CASCADE'), nullable=False)
-    client = db.relationship('Client', backref=db.backref('features', lazy='dynamic' , order_by='Feature.feature'))    
+    client = db.relationship('Client', backref=db.backref('features', lazy='dynamic' , order_by='Feature.title'))    
     area_id = db.Column(db.Integer, db.ForeignKey('area.id', ondelete='CASCADE'), nullable=False)
-    area = db.relationship('Area', backref=db.backref('features', lazy='dynamic' , order_by='Feature.feature'))
+    area = db.relationship('Area', backref=db.backref('features', lazy='dynamic' , order_by='Feature.title'))
 
     def __init__(self, title, description, target_date, client_priority, client, area):
         self.title = title
@@ -141,7 +141,7 @@ class Feature(db.Model, AddUpdateDelete):
         self.area = area
 
 
-class MessageSchema(ma.Schema):
+class FeatureSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     title = fields.String(required=True, validate=validate.Length(1))
     description = fields.String(required=True, validate=validate.Length(1))    
@@ -155,31 +155,26 @@ class MessageSchema(ma.Schema):
     area = fields.Nested(AreaSchema, only=['id', 'url', 'name'], required=True)
 
     @pre_load
-    def process_client(self, data):
+    def process_client_and_area(self, data):
         client = data.get('client')
         if client:
             if isinstance(client, dict):
-                client_name = client.get('name')
+                client_id = client.get('id')
             else:
-                client_name = client
-            client_dict = dict(name=client_name)                
+                client_id = client
+            client_dict = dict(name=client_id)                
         else:
             client_dict = {}
         data['client'] = client_dict
-        return data
 
-
-    @pre_load
-    def process_area(self, data):
         area = data.get('area')
         if area:
             if isinstance(area, dict):
-                area_name = area.get('name')
+                area_id = area.get('id')
             else:
-                area_name = area
-            area_dict = dict(name=area_name)                
+                area_id = area
+            area_dict = dict(name=area_id)                
         else:
             area_dict = {}
         data['area'] = area_dict
         return data
-

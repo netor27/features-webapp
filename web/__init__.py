@@ -1,9 +1,22 @@
 from flask import Flask, Blueprint
 from flasgger import Swagger
-from .models import db
-from .views import api_bp
+from flask_restful import Api
+from web.db import db
+from web.resources import *
 
+# Setup routes
 site = Blueprint('site', __name__)
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
+api.add_resource(AreaListResource, '/areas/')
+api.add_resource(AreaResource, '/areas/<int:id>')
+api.add_resource(ClientListResource, '/clients/')
+api.add_resource(ClientResource, '/clients/<int:id>')
+api.add_resource(FeatureListResource, '/features/')
+api.add_resource(FeatureResource, '/features/<int:id>')
+api.add_resource(UserListResource, '/users/')
+api.add_resource(UserResource, '/users/<int:id>')
+
 
 @site.route("/")
 def index():

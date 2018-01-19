@@ -4,21 +4,18 @@ class Status:
     def is_informational(self, code):
         return code >= 100 and code <= 199
 
-
     def is_success(self, code):
         return code >= 200 and code <= 299
-
 
     def is_redirect(self, code):
         return code >= 300 and code <= 399
 
-
     def is_client_error(self, code):
         return code >= 400 and code <= 499
 
-
     def is_server_error(self, code):
         return code >= 500 and code <= 599
+
 
 status = Status()
 
@@ -68,4 +65,3 @@ status.HTTP_503_SERVICE_UNAVAILABLE = 503
 status.HTTP_504_GATEWAY_TIMEOUT = 504
 status.HTTP_505_HTTP_VERSION_NOT_SUPPORTED = 505
 status.HTTP_511_NETWORK_AUTHENTICATION_REQUIRED = 511
-

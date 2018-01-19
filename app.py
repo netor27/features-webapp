@@ -1,6 +1,6 @@
 import sys
 from web import create_app
-from web.models import db
+from web.db import db
 
 configFile = "config"
 if len(sys.argv) > 1:

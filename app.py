@@ -1,5 +1,5 @@
 import sys
-from web import create_app
+from web.server import create_app
 from web.db import db
 
 configFile = "config"

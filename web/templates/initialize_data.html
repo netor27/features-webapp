@@ -1,0 +1,26 @@
+<!doctype html>
+<title>Hello from Flask</title>
+<html>
+    <h2>The database has been seeded with:</h2>
+    <h3>Users:</h3>
+    <ul>
+    {% for key, value in users.items() %}
+        <li> {{ key }} : {{ value }} </li>
+    {% endfor %}
+    </ul>
+    <h3>Areas:</h3>
+    <ul>
+    {% for a in areas %}
+        <li> {{ a }}</li>
+    {% endfor %}
+    </ul>
+    <h3>Clients:</h3>
+    <ul>
+    {% for c in clients %}
+        <li> {{ c }}</li>
+    {% endfor %}
+    </ul>
+
+    <a href="/">Return home</a>
+
+</html>

@@ -3,18 +3,11 @@ from flasgger import Swagger
 from flask_restful import Api
 from web.db import db
 from web.resources import *
-
-# Setup routes
-site = Blueprint('site', __name__)
-
-@site.route("/")
-def index():
-    html = "<h1>Hello world!</h1> <h3>The features api is running...</h3>"
-    return html
+from web.site import site
 
 
 def create_app(config_filename, debug=True):
-    app = Flask(__name__)
+    app = Flask(__name__, static_url_path='/static')
     Swagger(app)
     app.debug = debug
     app.config.from_object(config_filename)    

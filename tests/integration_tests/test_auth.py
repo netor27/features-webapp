@@ -1,7 +1,7 @@
 from unittest import TestCase
 from flask import url_for
 
-from web import create_app
+from web.server import create_app
 from web.db import db
 from web.status import status
 from tests.integration_tests.post_helpers import PostHelper

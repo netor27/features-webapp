@@ -16,11 +16,11 @@ class PostHelper():
         }
 
 
-    def get_authentication_headers(self, username, password):
+    def get_authentication_headers(self):
         authentication_headers = self.get_accept_content_type_headers()
         authentication_headers['Authorization'] = \
             'Basic ' + \
-            b64encode((username + ':' + password).encode('utf-8')
+            b64encode((self.test_user_name + ':' + self.test_user_password).encode('utf-8')
                       ).decode('utf-8')
         return authentication_headers
 
@@ -40,8 +40,7 @@ class PostHelper():
         data = {'name': name}
         response = self.test_client.post(
             url,
-            headers=self.get_authentication_headers(
-                self.test_user_name, self.test_user_password),
+            headers=self.get_authentication_headers(),
             data=json.dumps(data))
         return response
 
@@ -51,9 +50,8 @@ class PostHelper():
         data = {'name': name}
         response = self.test_client.post(
             url,
-            headers=get_authentication_headers(
-                self.test_user_name, self.test_user_password),
-            data=json.dumps(data))
+            headers=self.get_authentication_headers(),
+                data=json.dumps(data))
         return response
 
 
@@ -63,7 +61,6 @@ class PostHelper():
                 'client_priority': client_priority, 'client_name': client_name, 'area_name': area_name}
         response = self.test_client.post(
             url,
-            headers=self.get_authentication_headers(
-                self.test_user_name, self.test_user_password),
+            headers=self.get_authentication_headers(),
             data=json.dumps(data))
         return response

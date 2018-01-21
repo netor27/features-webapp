@@ -7,7 +7,7 @@ from web.helpers import PaginationHelper
 from web.models import Feature, FeatureSchema, Client, Area
 from web.resources import AuthRequiredResource
 from web.status import status
-from web import db
+from web.db import db
 
 
 feature_schema = FeatureSchema()
@@ -18,8 +18,8 @@ class FeatureResource(AuthRequiredResource):
     def get(self, id):
         feature = Feature.query.get_or_404(id)
         print(feature)
+        print(feature.id)
         result = feature_schema.dump(feature).data
-        print("feature_schema.dump().data")
         print(result)
         return result
 
@@ -76,7 +76,6 @@ class FeatureListResource(AuthRequiredResource):
         if not request_dict:
             response = {'message': 'No input data provided'}
             return response, status.HTTP_400_BAD_REQUEST
-        print(request_dict)
         errors = feature_schema.validate(request_dict)
         if errors:
             return errors, status.HTTP_400_BAD_REQUEST

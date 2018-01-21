@@ -100,7 +100,6 @@ class ClientsTests(TestCase):
             url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
-        print(res_data)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res_data['count'], 2)
         self.assertEqual(res_data["results"][0]['name'], client_name)

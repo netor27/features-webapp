@@ -1,15 +1,16 @@
 from unittest import TestCase
 from flask import url_for, json
+from datetime import date
 
 from web.server import create_app
 from web.db import db
 from web.status import status
-from web.models import Area
+from web.models import Feature
 
 from tests.integration_tests.post_helpers import PostHelper
 
 
-class AreasTests(TestCase):
+class FeaturesTests(TestCase):
 
     def setUp(self):
         self.app = create_app('configtest')
@@ -28,54 +29,42 @@ class AreasTests(TestCase):
         self.app_context.pop()
 
 
-    def test_create_and_retrieve_area(self):
+    def test_create_and_retrieve_feature(self):
         """
-        Ensure we can create a new Area and then retrieve it
+        Ensure we can create a new Feature and then retrieve it
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        # create a new area, assert we receive a 201 http code and and assert there's only one Area in the db
-        new_area_name = 'New Area Name'
-        post_res = self.ph.create_area(new_area_name)
-        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Area.query.count(), 1)
+        # create a new feature, assert we receive a 201 http code and and assert there's only one Feature in the db
+        title = 'New Feature Title'
+        description = "Description " * 10
+        target_date = date(2018, 6, 15)
+        priority = 1
+        client = "Client 1"
+        area = "Billing"
+        post_res = self.ph.create_feature(title, description, target_date, priority, client, area)
+        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+        self.assertEqual(Feature.query.count(), 1)
 
         # check that the returned values in the post response are correct
-        post_res_data = json.loads(post_res.get_data(as_text=True))
-        self.assertEqual(post_res_data['name'], new_area_name)
+        post_res_data = json.loads(post_res.get_data(as_text=True))   
+        self.assertEqual(post_res_data['title'], title)
+        self.assertEqual(post_res_data['description'], description)
+        self.assertEqual(post_res_data['target_date'], date)
+        self.assertEqual(post_res_data['priority'], priority)
+        self.assertEqual(post_res_data['client']['name'], client)
+        self.assertEqual(post_res_data['area']['name'], area)
 
-        # get the new area url, retrieve it and assert the correct values
-        area_url = post_res_data['url']
+        # get the new feature url, retrieve it and assert the correct values
+        feature_url = post_res_data['url']
         res = self.test_client.get(
-            area_url,
+            feature_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res_data['name'], new_area_name)
-
-
-    def test_create_duplicated_area(self):
-        """
-        Ensure we cannot create a duplicated Area
-        """
-        # create our user so we can authenticate 
-        res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-
-        # create a new area and assert the respose values
-        new_area_name = 'New Information'
-        post_res = self.ph.create_area(new_area_name)
-        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Area.query.count(), 1)
-        post_res_data = json.loads(post_res.get_data(as_text=True))
-        self.assertEqual(post_res_data['name'], new_area_name)
-
-        # try to assert it again, and assert the status code is an http 400
-        second_post_res = self.ph.create_area(new_area_name)
-        self.assertEqual(second_post_res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Area.query.count(), 1)
+        self.assertEqual(res_data['name'], title)
 
 
     def test_retrieve_categories_list(self):
@@ -86,88 +75,88 @@ class AreasTests(TestCase):
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        # create 2 areas and assert the response
-        area_name = 'Area 1'
-        post_res_1 = self.ph.create_area(area_name)
+        # create 2 features and assert the response
+        feature_name = 'Feature 1'
+        post_res_1 = self.ph.create_feature(feature_name)
         self.assertEqual(post_res_1.status_code, status.HTTP_201_CREATED)
-        area_name_2 = 'Area 2'
-        post_res_2 = self.ph.create_area(area_name_2)
+        feature_name_2 = 'Feature 2'
+        post_res_2 = self.ph.create_feature(feature_name_2)
         self.assertEqual(post_res_2.status_code, status.HTTP_201_CREATED)
 
-        # retrieve the complete list of areas, it should return only the 2 we created
-        url = url_for('api.arealistresource', _external=True)
+        # retrieve the complete list of features, it should return only the 2 we created
+        url = url_for('api.featurelistresource', _external=True)
         res = self.test_client.get(
             url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(res_data['count'], 2)
-        self.assertEqual(res_data["results"][0]['name'], area_name)
-        self.assertEqual(res_data["results"][1]['name'], area_name_2)
+        self.assertEqual(res_data["results"][0]['name'], feature_name)
+        self.assertEqual(res_data["results"][1]['name'], feature_name_2)
 
 
-    def test_update_area(self):
+    def test_update_feature(self):
         """
-        Ensure we can update the name for an existing area
+        Ensure we can update the name for an existing feature
         """
-        # create our user so we can authenticate and create the area
+        # create our user so we can authenticate and create the feature
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        # create a new area and assert the result
-        area_name = 'Area 1'
-        post_res_1 = self.ph.create_area(area_name)
+        # create a new feature and assert the result
+        feature_name = 'Feature 1'
+        post_res_1 = self.ph.create_feature(feature_name)
         self.assertEqual(post_res_1.status_code, status.HTTP_201_CREATED)
         post_res_data_1 = json.loads(post_res_1.get_data(as_text=True))
 
-        # create a patch request to update the area name
-        area_url = post_res_data_1['url']
-        area_name_2 = 'Area 2'
-        data = {'name': area_name_2}
+        # create a patch request to update the feature name
+        feature_url = post_res_data_1['url']
+        feature_name_2 = 'Feature 2'
+        data = {'name': feature_name_2}
         patch_response = self.test_client.patch(
-            area_url, 
+            feature_url, 
             headers=self.ph.get_authentication_headers(),
             data=json.dumps(data))
         self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
 
-        # retrieve the updated area and validate the name is the same as the updated value
+        # retrieve the updated feature and validate the name is the same as the updated value
         res = self.test_client.get(
-            area_url,
+            feature_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res_data['name'], area_name_2)
+        self.assertEqual(res_data['name'], feature_name_2)
 
   
-    def test_create_delete_and_retrieve_area(self):
+    def test_create_delete_and_retrieve_feature(self):
         """
-        Ensure we can create a new Area, delete it and if we retrieve it should not be there
+        Ensure we can create a new Feature, delete it and if we retrieve it should not be there
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
-        # create a new area, assert we receive a 201 http code and and assert there's only one Area in the db
-        new_area_name = 'New Area Name'
-        post_res = self.ph.create_area(new_area_name)
+        # create a new feature, assert we receive a 201 http code and and assert there's only one Feature in the db
+        title = 'New Feature Name'
+        post_res = self.ph.create_feature(title)
         self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Area.query.count(), 1)
+        self.assertEqual(Feature.query.count(), 1)
 
         # check that the returned values in the post response are correct
         post_res_data = json.loads(post_res.get_data(as_text=True))
-        self.assertEqual(post_res_data['name'], new_area_name)
+        self.assertEqual(post_res_data['name'], title)
 
-        # get the new area url and delete it
-        area_url = post_res_data['url']
+        # get the new feature url and delete it
+        feature_url = post_res_data['url']
         patch_res = self.test_client.delete(
-            area_url,
+            feature_url,
             headers=self.ph.get_authentication_headers())
         
         # retrieve it and assert the correct values
         self.assertEqual(patch_res.status_code, status.HTTP_204_NO_CONTENT)
 
         res = self.test_client.get(
-            area_url,
+            feature_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
         self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)

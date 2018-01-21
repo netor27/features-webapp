@@ -57,8 +57,8 @@ class PostHelper():
 
     def create_feature(self, title, description, target_date, client_priority, client_name, area_name):
         url = url_for('api.featurelistresource', _external=True)
-        data = {'title': title, 'description': description, 'target_date': target_date,
-                'client_priority': client_priority, 'client_name': client_name, 'area_name': area_name}
+        data = {'title': title, 'description': description, 'target_date': target_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                'client_priority': client_priority, 'client': client_name, 'area': area_name}
         response = self.test_client.post(
             url,
             headers=self.get_authentication_headers(),

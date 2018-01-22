@@ -30,8 +30,6 @@ class Feature(db.Model, AddUpdateDelete):
         self.title = title
         self.description = description
         self.target_date = target_date
-        print("=================")
-        print(self.target_date)
         self.client_priority = client_priority
         self.client = client
         self.area = area
@@ -41,8 +39,8 @@ class FeatureSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     title = fields.String(required=True, validate=validate.Length(1))
     description = fields.String(required=True, validate=validate.Length(1))
-    creation_date = fields.DateTime()
-    target_date = fields.DateTime(required=True)
+    creation_date = fields.DateTime(required=True)
+    target_date = fields.Date(required=True)
     client_priority = fields.Integer()
     url = ma.URLFor('api.featureresource', id='<id>', _external=True)
 

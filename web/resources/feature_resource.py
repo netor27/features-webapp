@@ -17,10 +17,7 @@ class FeatureResource(AuthRequiredResource):
 
     def get(self, id):
         feature = Feature.query.get_or_404(id)
-        print(feature)
-        print(feature.id)
         result = feature_schema.dump(feature).data
-        print(result)
         return result
 
     def patch(self, id):
@@ -92,7 +89,7 @@ class FeatureListResource(AuthRequiredResource):
             if area is None:
                 area = Area(name=area_name)
                 db.session.add(area)
-
+            
             feature = Feature(
                 title=request_dict['title'],
                 description=request_dict['description'],

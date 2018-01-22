@@ -28,4 +28,4 @@ class AreaSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     name = fields.String(required=True, validate=validate.Length(3))
     url = ma.URLFor('api.arearesource', id='<id>', _external=True)
-    messages = fields.Nested('FeatureSchema', many=True, exclude=('area',))
+    features = fields.Nested('FeatureSchema', many=True, exclude=('area',))

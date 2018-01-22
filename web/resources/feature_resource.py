@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import SQLAlchemyError
@@ -28,9 +29,24 @@ class FeatureResource(AuthRequiredResource):
         if 'description' in feature_dict:
             feature.description = feature_dict['description']
         if 'target_date' in feature_dict:
-            feature.target_date = feature_dict['target_date']
+            feature.target_date = datetime.strptime(feature_dict['target_date'], "%Y-%m-%d")
         if 'client_priority' in feature_dict:
             feature.client_priority = feature_dict['client_priority']
+        if 'client' in feature_dict:
+            client_name = feature_dict['client']
+            client = Client.query.filter_by(name=client_name).first()
+            if client is None:
+                response = {'message': "The client {} doesn't exists".format(client_name)}
+                return response, status.HTTP_400_BAD_REQUEST
+            feature.client = client
+        if 'area' in feature_dict:
+            area_name = feature_dict['area']
+            area = Area.query.filter_by(name=area_name).first()
+            if area is None:
+                response = {'message': "The area {} doesn't exists".format(area_name)}
+                return response, status.HTTP_400_BAD_REQUEST
+            feature.area = area
+
         dumped_feature, dump_errors = feature_schema.dump(feature)
         if dump_errors:
             return dump_errors, status.HTTP_400_BAD_REQUEST

@@ -39,9 +39,9 @@ class FeatureSchema(ma.Schema):
     id = fields.Integer(dump_only=True)
     title = fields.String(required=True, validate=validate.Length(1))
     description = fields.String(required=True, validate=validate.Length(1))
-    creation_date = fields.DateTime(required=True)
     target_date = fields.Date(required=True)
-    client_priority = fields.Integer()
+    client_priority = fields.Integer(required=True)
+    creation_date = fields.DateTime()    
     url = ma.URLFor('api.featureresource', id='<id>', _external=True)
 
     # relationships

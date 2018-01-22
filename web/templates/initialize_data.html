@@ -1,7 +1,9 @@
 <!doctype html>
-<title>Hello from Flask</title>
+<title>Demo Feature App</title>
 <html>
-    <h2>The database has been seeded with:</h2>
+    <h4><a href="/">Return home</a></h4>
+
+    <h2>The database has been seeded with demo data.</h2>
     <h3>Users:</h3>
     <ul>
     {% for key, value in users.items() %}
@@ -21,6 +23,21 @@
     {% endfor %}
     </ul>
 
-    <a href="/">Return home</a>
+    <h3>Features:</h3>
+    <ul>
+    {% for f in features %}
+        <li> 
+            {{ f['title'] }}
+            <ul>
+                <li>Description: {{ f['description'] }}</li>
+                <li>Client Priority: {{ f['client_priority'] }}</li>
+                <li>Target Date: {{ f['target_date'] }}</li>
+                <li>Area: {{ f['area'] }}</li>
+                <li>Client: {{ f['client'] }}</li>
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
 
+    
 </html>

@@ -34,12 +34,12 @@ class ClientsTests(TestCase):
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.get_data(as_text=True))
 
         # create a new client, assert we receive a 201 http code and and assert there's only one Client in the db
         new_client_name = 'New Client Name'
         post_res = self.ph.create_client(new_client_name)
-        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
         self.assertEqual(Client.query.count(), 1)
 
         # check that the returned values in the post response are correct
@@ -52,7 +52,7 @@ class ClientsTests(TestCase):
             client_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK, res.get_data(as_text=True))
         self.assertEqual(res_data['name'], new_client_name)
 
 
@@ -62,37 +62,38 @@ class ClientsTests(TestCase):
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.get_data(as_text=True))
 
         # create a new client and assert the respose values
         new_client_name = 'New Information'
         post_res = self.ph.create_client(new_client_name)
-        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
         self.assertEqual(Client.query.count(), 1)
         post_res_data = json.loads(post_res.get_data(as_text=True))
         self.assertEqual(post_res_data['name'], new_client_name)
 
         # try to assert it again, and assert the status code is an http 400
         second_post_res = self.ph.create_client(new_client_name)
-        self.assertEqual(second_post_res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(second_post_res.status_code, status.HTTP_400_BAD_REQUEST, "The insertion of a duplicate client didn't return a 400 code")
         self.assertEqual(Client.query.count(), 1)
 
 
-    def test_retrieve_categories_list(self):
+    def test_retrieve_clients_list(self):
         """
-        Ensure we can retrieve the categories list
+        Ensure we can retrieve the clients list
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.get_data(as_text=True))
 
-        # create 2 clients and assert the response
-        client_name = 'Client 1'
-        post_res_1 = self.ph.create_client(client_name)
-        self.assertEqual(post_res_1.status_code, status.HTTP_201_CREATED)
-        client_name_2 = 'Client 2'
-        post_res_2 = self.ph.create_client(client_name_2)
-        self.assertEqual(post_res_2.status_code, status.HTTP_201_CREATED)
+        # create 4 clients and assert the response
+        for i in range(1, 5):
+            name = 'Client {}'.format(i)            
+            post_res = self.ph.create_client(name)
+            self.assertEqual(post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+        
+        # assert we only have this 4
+        self.assertEqual(Client.query.count(), 4)
 
         # retrieve the complete list of clients, it should return only the 2 we created
         url = url_for('api.clientlistresource', _external=True)
@@ -100,10 +101,8 @@ class ClientsTests(TestCase):
             url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res_data['count'], 2)
-        self.assertEqual(res_data["results"][0]['name'], client_name)
-        self.assertEqual(res_data["results"][1]['name'], client_name_2)
+        self.assertEqual(res.status_code, status.HTTP_200_OK, res.get_data(as_text=True))
+        self.assertEqual(res_data['count'], 4)
 
 
     def test_update_client(self):
@@ -112,12 +111,12 @@ class ClientsTests(TestCase):
         """
         # create our user so we can authenticate and create the client
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.get_data(as_text=True))
 
         # create a new client and assert the result
         client_name = 'Client 1'
         post_res_1 = self.ph.create_client(client_name)
-        self.assertEqual(post_res_1.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(post_res_1.status_code, status.HTTP_201_CREATED, post_res_1.get_data(as_text=True))
         post_res_data_1 = json.loads(post_res_1.get_data(as_text=True))
 
         # create a patch request to update the client name
@@ -128,14 +127,14 @@ class ClientsTests(TestCase):
             client_url, 
             headers=self.ph.get_authentication_headers(),
             data=json.dumps(data))
-        self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(patch_response.status_code, status.HTTP_200_OK, patch_response.get_data(as_text=True))
 
         # retrieve the updated client and validate the name is the same as the updated value
         res = self.test_client.get(
             client_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.status_code, status.HTTP_200_OK, res.get_data(as_text=True))
         self.assertEqual(res_data['name'], client_name_2)
 
   
@@ -145,12 +144,12 @@ class ClientsTests(TestCase):
         """
         # create our user so we can authenticate 
         res = self.ph.create_user(self.test_user_name, self.test_user_password)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED, res.get_data(as_text=True))
 
         # create a new client, assert we receive a 201 http code and and assert there's only one Client in the db
         new_client_name = 'New Client Name'
         post_res = self.ph.create_client(new_client_name)
-        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
         self.assertEqual(Client.query.count(), 1)
 
         # check that the returned values in the post response are correct
@@ -164,10 +163,10 @@ class ClientsTests(TestCase):
             headers=self.ph.get_authentication_headers())
         
         # retrieve it and assert the correct values
-        self.assertEqual(patch_res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(patch_res.status_code, status.HTTP_204_NO_CONTENT, patch_res.get_data(as_text=True))
 
         res = self.test_client.get(
             client_url,
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
-        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND, res.get_data(as_text=True))

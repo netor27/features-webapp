@@ -10,5 +10,5 @@ SQLALCHEMY_DATABASE_URI = "postgresql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}"
                           .format(DB_USER="apiuser", DB_PASS="password", \
                           DB_ADDR=DATABASE_HOST, DB_NAME="features")
 SQLALCHEMY_MIGRATE_REPO = os.path.join(BASE_DIR, 'db_repository')
-PAGINATION_PAGE_SIZE = 5
+PAGINATION_PAGE_SIZE_ARGUMENT_NAME = 'size'
 PAGINATION_PAGE_ARGUMENT_NAME = 'page'

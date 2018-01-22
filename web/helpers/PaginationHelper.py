@@ -9,13 +9,13 @@ class PaginationHelper():
         self.resource_for_url = resource_for_url
         self.key_name = key_name
         self.schema = schema
-        self.results_per_page = current_app.config['PAGINATION_PAGE_SIZE']
+        self.page_size_argument_name = current_app.config['PAGINATION_PAGE_SIZE_ARGUMENT_NAME']
         self.page_argument_name = current_app.config['PAGINATION_PAGE_ARGUMENT_NAME']
 
     def paginate_query(self):
         # If no page number is specified, we assume the request wants page #1
-        page_number = self.request.args.get(
-            self.page_argument_name, 1, type=int)
+        page_number = self.request.args.get(self.page_argument_name, 1, type=int)
+        results_per_page = self.request.args.get(self.page_size_argument_name, 5, type=int)
         paginated_objects = self.query.paginate(
             page_number,
             per_page=self.results_per_page,
@@ -25,6 +25,7 @@ class PaginationHelper():
             previous_page_url = url_for(
                 self.resource_for_url,
                 page=page_number - 1,
+                size=results_per_page,
                 _external=True)
         else:
             previous_page_url = None
@@ -32,6 +33,7 @@ class PaginationHelper():
             next_page_url = url_for(
                 self.resource_for_url,
                 page=page_number + 1,
+                size=results_per_page,
                 _external=True)
         else:
             next_page_url = None

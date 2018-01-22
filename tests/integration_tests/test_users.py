@@ -58,7 +58,7 @@ class UsersTests(TestCase):
         self.assertEqual(first_res_data['next'], url_for('api.userlistresource', page=2))
         self.assertIsNone(first_res_data['previous'])
         self.assertIsNotNone(first_res_data['results'])
-        self.assertEqual(len(first_res_data['results']), 5    )
+        self.assertEqual(len(first_res_data['results']), 5)
         self.assertEqual(first_res_data['results'][0]['name'], self.test_user_name)
 
         # Get the second page, there should be only 2 elements

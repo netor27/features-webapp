@@ -1,0 +1,22 @@
+version: "2.0"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - database    
+    links:
+      - database
+    ports:
+      - "5000:5000"
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: apiuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: messages
+    expose:
+      - 5432
+     

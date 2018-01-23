@@ -16,7 +16,7 @@ class AreasTests(TestCase):
         self.test_client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
-        self.test_user_name = 'testuser'
+        self.test_user_name = 'testuserAreas'
         self.test_user_password = 'T3s!p4s5w0RDd12#'
         self.ph = PostHelper(self.test_client, self.test_user_name, self.test_user_password)
         db.create_all()

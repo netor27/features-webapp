@@ -54,6 +54,11 @@ class FeatureResource(AuthRequiredResource):
         if validate_errors:
             return validate_errors, status.HTTP_400_BAD_REQUEST
         try:
+            # only if the client priority was updated, check that we don't have the same priority as another feature, and update accordingly
+            if 'client_priority' in feature_dict:
+                # check that no features of the same client have the same priority, when we update the feature, the session will commit
+                other_features = Feature.query.filter_by(client_id=feature.client_id).all()
+                feature.adjust_features_priority(other_features)            
             feature.update()
             return self.get(id)
         except SQLAlchemyError as e:
@@ -113,7 +118,13 @@ class FeatureListResource(AuthRequiredResource):
                 client_priority=request_dict['client_priority'],
                 client=client,
                 area=area)
+
+            # check that no features of the same client have the same priority, when we add the new feature, the session will commit
+            other_features = Feature.query.filter_by(client_id=client.id).all()
+            feature.adjust_features_priority(other_features)
             feature.add(feature)
+
+            # query this feature from the database
             query = Feature.query.get(feature.id)
             result = feature_schema.dump(query).data
             return result, status.HTTP_201_CREATED

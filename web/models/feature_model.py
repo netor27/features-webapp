@@ -34,6 +34,15 @@ class Feature(db.Model, AddUpdateDelete):
         self.client = client
         self.area = area
 
+    def adjust_features_priority(self, features):
+        higher_features = [f for f in features if f.id != self.id and f.client_priority >= self.client_priority]
+        if len(higher_features) == 0:
+            return
+        
+        for f in higher_features:
+                f.client_priority += 1
+                
+
 
 class FeatureSchema(ma.Schema):
     id = fields.Integer(dump_only=True)

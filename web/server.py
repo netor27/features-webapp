@@ -29,4 +29,6 @@ def _create_api_blueprint():
     api.add_resource(FeatureResource, '/features/<int:id>')
     api.add_resource(UserListResource, '/users/')
     api.add_resource(UserResource, '/users/<int:id>')
+    api.add_resource(UserLoginResource, '/users/<string:name>')
+    
     return api_bp

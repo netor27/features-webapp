@@ -13,6 +13,7 @@ user_schema = UserSchema()
 
 
 class UserResource(AuthRequiredResource):
+
     def get(self, id):
         user = User.query.get_or_404(id)
         result = user_schema.dump(user).data
@@ -20,6 +21,7 @@ class UserResource(AuthRequiredResource):
 
 
 class UserListResource(Resource):
+
     @auth.login_required
     def get(self):
         pagination_helper = PaginationHelper(
@@ -60,3 +62,14 @@ class UserListResource(Resource):
             db.session.rollback()
             resp = {"error": str(e)}
             return resp, status.HTTP_400_BAD_REQUEST
+
+
+class UserLoginResource(AuthRequiredResource):
+
+    def get(self, name):
+        user = User.query.filter_by(name=name).first()
+        if user is None:
+            response = {'message': "The user {} doesn't exists".format(name)}
+            return response, status.HTTP_400_BAD_REQUEST
+        result = user_schema.dump(user).data
+        return result

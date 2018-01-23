@@ -18,7 +18,7 @@ class PaginationHelper():
         results_per_page = self.request.args.get(self.page_size_argument_name, 5, type=int)
         paginated_objects = self.query.paginate(
             page_number,
-            per_page=self.results_per_page,
+            per_page=results_per_page,
             error_out=False)
         objects = paginated_objects.items
         if paginated_objects.has_prev:

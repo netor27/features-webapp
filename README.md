@@ -1,7 +1,7 @@
 [![Python](https://img.shields.io/badge/python-3.5-blue.svg)]()
-[![Requirements Status](https://requires.io/github/netor27/messages-api/requirements.svg?branch=master)](https://requires.io/github/netor27/messages-api/requirements/?branch=master)
-[![Build Status](https://travis-ci.org/netor27/messages-api.svg?branch=master)](https://travis-ci.org/netor27/messages-api)
-[![Coverage](https://codecov.io/gh/netor27/messages-api/branch/master/graph/badge.svg)](https://codecov.io/gh/netor27/messages-api)
+[![Requirements Status](https://requires.io/github/netor27/features-webapp/requirements.svg?branch=master)](https://requires.io/github/netor27/features-webapp/requirements/?branch=master)
+[![Build Status](https://travis-ci.org/netor27/features-webapp.svg?branch=master)](https://travis-ci.org/netor27/features-webapp)
+[![Coverage](https://codecov.io/gh/netor27/features-webapp/branch/master/graph/badge.svg)](https://codecov.io/gh/netor27/features-webapp)
 
 
 # features-webapp

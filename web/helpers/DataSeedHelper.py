@@ -1,6 +1,8 @@
 from web.models import Area, Client, User, Feature
 from web.helpers.seed_static_data import users, areas, clients, features
 
+"""
+"""
 class DataSeedHelper():
 
     def seed_demo_site(self):

@@ -6,7 +6,7 @@ configFile = "config"
 if len(sys.argv) > 1:
     configFile = sys.argv[1]
 
-app = create_app(configFile, debug=True)
+app = create_app(configFile)
 
 if __name__ == '__main__':   
     # Create in the db the tables that are missing

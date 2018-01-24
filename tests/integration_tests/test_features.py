@@ -14,8 +14,8 @@ from tests.integration_tests.post_helpers import PostHelper
 class FeaturesTests(TestCase):
 
     @pytest.fixture(autouse=True)
-    def transact(self, request, configfile):
-        self.app = create_app(configfile)
+    def transact(self, request, configfile, waitForDb):
+        self.app = create_app(configfile, waitForDb)
         self.test_client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()

@@ -6,8 +6,7 @@ site = Blueprint('site', __name__)
 
 @site.route("/")
 def index():
-    html = "<h1>Hello world!</h1> <h3>The features api is running...</h3>"
-    return html
+    return render_template('single_page_app.html')
 
 @site.route("/admin/initialize_demo_data")
 def admin_initialize_data():

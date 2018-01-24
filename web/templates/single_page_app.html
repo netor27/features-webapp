@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Demo Features App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="/static/css/site.css">
+</head>
+
+<body data-gr-c-s-loaded="true">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Features App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item" data-bind="if: user">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item" data-bind="if: user">
+                    <a class="nav-link" href="#clients">Clients</a>
+                </li>
+                <li class="nav-item" data-bind="if: user">
+                    <a class="nav-link" href="#areas">Areas</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" data-bind="if: user">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span data-bind="text: user().name"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#" data-bind="click: logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" data-bind="ifnot: user">
+                <input class="form-control mr-sm-2" type="text" placeholder="User Name" aria-label="User Name" data-bind="value: userLoginForm.name">
+                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" data-bind="value: userLoginForm.password">
+                <button class="btn btn-outline-info my-2 my-sm-0" data-bind="click: login">Login</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container-fluid bg-3 ">
+        <div class="homeContainer" data-bind="if: 'home' == currentPage()">
+            <h1>Home</h1>
+        </div>
+        <div class="featuresContainer" data-bind="if: 'features' == currentPage()">
+            <h1>Features</h1>
+        </div>
+        <div class="areasContainer" data-bind="if: 'areas' == currentPage()">
+            <h1>Areas</h1>
+        </div>
+        <div class="clientsContainer" data-bind="if: 'clients' == currentPage()">
+            <h1>Clients</h1>
+        </div>
+    </div>
+
+    <footer class="container-fluid text-center">
+        <p>Footer Text</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sammy.js/0.7.6/sammy.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript" src="/static/js/ajaxHelper.js"></script>
+    <script type="text/javascript" src="/static/js/app.js"></script>
+
+</body>
+
+</html>

@@ -3,8 +3,7 @@ import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
-DATABASE_HOST = "database" # For docker use
-#DATABASE_HOST = "127.0.0.1" # For local  use
+DATABASE_HOST = "127.0.0.1" # For local  use
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_DATABASE_URI = "postgresql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}" \

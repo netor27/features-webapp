@@ -29,7 +29,7 @@ services:
     environment:
       POSTGRES_USER: apiuser
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: test_messages
+      POSTGRES_DB: test_features
     expose:
       - 5432
 

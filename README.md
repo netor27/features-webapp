@@ -5,7 +5,8 @@
 
 
 # features-webapp
-Python/Flask demo web app. This API manage the following resources:
+This a demo site based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python and Flask.
+This consist in a Knockout.js single page application and a Restful API with the following resources:
 
 * features : Information about a specific feature that a client requested (title, description, priority, target date, area, etc. )
 
@@ -13,33 +14,49 @@ Python/Flask demo web app. This API manage the following resources:
 
 * areas: Area name and the relationsip to features
 
+This app can be started using docker or running the stand-alone service.
 
-## Start the service with docker
+# Start the service with docker-compose (Recommended)
 
-Install [docker](https://docs.docker.com/engine/installation/) and run:
+* Install [docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/)
+
+* Execute the following commands:
 
 ```shell
-docker-compose build
-docker-compose up -d
+sudo docker-compose build
+sudo docker-compose up -d
 ```
 
-Initialize the postgre cointainer with the features schema
-```shell
-docker-compose run web python3 migrate.py db upgrade
-```
+This will initialize the containers (one with a postgreSQL database and another with the flask app).
 
+* Open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database with demo data (Take note on one of the user/password combinations that were printed out).
 
-Visit [http://localhost:5000](http://localhost:5000)
+That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000)
 
 * To stop the containers
 
 ```shell
-docker-compose down
+sudo docker-compose down
 ```
 
-## Start the standalone service
+## Running the tests inside a docker container
 
-### Setup the PostgreSQL database
+* Execute the following commands to build the test images and run the tests
+
+```shell
+sudo docker-compose -f docker-compose.tests.yml -p ci build
+sudo docker-compose -f docker-compose.tests.yml -p ci run web-tests python -m pytest --cov=web/ tests --configfile=configtestdocker
+```
+
+*That will print out the tests results and the code coverage. To stop the test images, run the following command
+
+```shell
+sudo docker-compose down
+```
+
+# Start the standalone service
+
+## Setup the PostgreSQL database
 
 * Create a database in PostgreSQL, login as the default user (set "features" to your desired new db name)
 ```shell
@@ -56,58 +73,28 @@ GRANT ALL PRIVILEGES ON DATABASE features TO apiuser;
 ALTER USER apiuser CREATEDB;
 ```
 
-## Setting up the database schema
-
 * Update the contents of config.py with the values for your database name, database user, database host. The current values are used for docker images
 
-* Initialize the db via migration from flask
-
-```shell
-python migrate.py db upgrade
-```
-
-* Only if there are changes in the models that are not present on the migrations scripts, the following command must be executed to update the migration scripts
-
-```shell
-python migrate.py db migrate
-```
-
+* The app will initialize the schema by itself the first time it runs
 
 ### Running the service
-* Install the requirements and run the app
+
+* To install the requirements and run the app, execute the following commands:
 
 ```shell
 pip install -r requirements.txt
 python app.py
 ```
-Visit [http://localhost:5000](http://localhost:5000)
 
-## Development
+* Open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database with demo data (Take note on one of the user/password combinations that were printed out).
 
-* Create a branch for features or fixes.
-* After making changes rebuild the docker images and run the containers.
+That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000)
 
-```shell
-docker-compose build
-docker-compose up -d
-```
-
-## Tests
-
-### Running tests inside a docker container
-
-* Build the test images and run the tests
-
-```shell
-docker-compose -f docker-compose.tests.yml -p ci build
-docker-compose -f docker-compose.tests.yml -p ci run test python -m pytest --cov=web/ tests
-```
-
-### Running tests with the standalone service
+## Running tests with the standalone service
 
 * First you need to setup a local database and update the config file with the values for your db name, user name, password and db hostname
 
-#### Setting up the test database
+### Setting up the test database
 
 * Create a database in PostgreSQL, login as the default user (set 'test_mesages' to your desired new db name)
 
@@ -124,7 +111,9 @@ psql
 GRANT ALL PRIVILEGES ON DATABASE test_features TO apiuser;
 ```
 
-### Running unit tests
+* Update the contents of configtest.py with the values for your database name, database user, database host. 
+
+### Running tests
 
 ```shell
 pip install pytest pytest-cov pytest-flask

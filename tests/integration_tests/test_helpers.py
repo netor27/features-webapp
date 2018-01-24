@@ -1,3 +1,4 @@
+import pytest
 from unittest import TestCase
 
 from web.server import create_app
@@ -13,14 +14,16 @@ from web.models import Area, Client, Feature, User
 
 class HelpersTests(TestCase):
 
-    def setUp(self):
-        self.app = create_app('configtest')
+    @pytest.fixture(autouse=True)
+    def transact(self, request, configfile):
+        self.app = create_app(configfile)
         self.test_client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
+        self.test_user_name = 'testuserusers'
+        self.test_user_password = 'T3s!p4s5w0RDd12#'
         db.create_all()
-
-    def tearDown(self):
+        yield 
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
@@ -51,7 +54,6 @@ class HelpersTests(TestCase):
         # assert the features were created correctly
         self.assertEqual(Feature.query.count(), len(features))
         for f in features:
-            print(f)
             db_feature = Feature.query.filter_by(title=f['title']).first()
             self.assertEqual(f['title'], db_feature.title)
             self.assertEqual(f['description'], db_feature.description)

@@ -23,7 +23,6 @@ class FeaturesTests(TestCase):
         new_feature.adjust_features_priority(features)
         self.assertEqual(new_feature.client_priority, 5)
         for i in range(11):
-            print(i, features[i].client_priority)
             if i < 4:
                 self.assertEqual(features[i].client_priority, i+1)
             elif i == 10:

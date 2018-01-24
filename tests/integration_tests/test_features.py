@@ -1,4 +1,4 @@
-import pprint
+import pytest
 from unittest import TestCase
 from flask import url_for, json
 from datetime import date
@@ -13,19 +13,17 @@ from tests.integration_tests.post_helpers import PostHelper
 
 class FeaturesTests(TestCase):
 
-    def setUp(self):
-        self.app = create_app('configtest')
+    @pytest.fixture(autouse=True)
+    def transact(self, request, configfile):
+        self.app = create_app(configfile)
         self.test_client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
-        self.test_user_name = 'testuserfeatures'
+        self.test_user_name = 'testuserusers'
         self.test_user_password = 'T3s!p4s5w0RDd12#'
-        self.ph = PostHelper(
-            self.test_client, self.test_user_name, self.test_user_password)
+        self.ph = PostHelper(self.test_client, self.test_user_name, self.test_user_password)
         db.create_all()
-
-
-    def tearDown(self):
+        yield 
         db.session.remove()
         db.drop_all()
         self.app_context.pop()
@@ -166,7 +164,6 @@ class FeaturesTests(TestCase):
             headers=self.ph.get_authentication_headers())
         res_data = json.loads(res.get_data(as_text=True))
         self.assertEqual(res.status_code, status.HTTP_200_OK, res.get_data(as_text=True))
-        print(res_data)
         self.assertEqual(res_data['title'], title)
         self.assertEqual(res_data['description'], description)
         self.assertEqual(res_data['target_date'], target_date.isoformat())
@@ -224,7 +221,6 @@ class FeaturesTests(TestCase):
         for i in range(11):
             id = features[i]['id']
             priority = features[i]['client_priority']
-            print(priority, id)
             if id <= 4:
                 self.assertEqual(priority, id)
             elif id == 11:

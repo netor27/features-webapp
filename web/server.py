@@ -1,3 +1,5 @@
+import subprocess
+import shlex
 from flask import Flask, Blueprint
 from flasgger import Swagger
 from flask_restful import Api
@@ -11,6 +13,7 @@ def create_app(config_filename, debug=True):
     Swagger(app)
     app.debug = debug
     app.config.from_object(config_filename)    
+    subprocess.call(shlex.split('./wait-for-it.sh {}:5432'.format(app.config['DATABASE_HOST'])))
     db.init_app(app)
     app.register_blueprint(site)
     api_bp = _create_api_blueprint()

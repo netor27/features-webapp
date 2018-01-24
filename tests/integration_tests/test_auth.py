@@ -1,3 +1,4 @@
+import pytest
 from unittest import TestCase
 from flask import url_for, json
 
@@ -10,18 +11,17 @@ from tests.integration_tests.post_helpers import PostHelper
 
 class AuthTests(TestCase):
 
-    def setUp(self):
-        self.app = create_app('configtest')
+    @pytest.fixture(autouse=True)
+    def transact(self, request, configfile):
+        self.app = create_app(configfile)
         self.test_client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()
-        self.test_user_name = 'testuserauth'
+        self.test_user_name = 'testuserusers'
         self.test_user_password = 'T3s!p4s5w0RDd12#'
         self.ph = PostHelper(self.test_client, self.test_user_name, self.test_user_password)
         db.create_all()
-    
-
-    def tearDown(self):
+        yield 
         db.session.remove()
         db.drop_all()
         self.app_context.pop()

@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_USER: apiuser
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: messages
+      POSTGRES_DB: features
     expose:
       - 5432
      

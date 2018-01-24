@@ -53,7 +53,14 @@
             <h1>Home</h1>
         </div>
         <div class="featuresContainer" data-bind="if: 'features' == currentPage()">
-            <h1>Features</h1>
+            <div data-bind="with: features">
+                <h1>Features</h1>
+                <ul data-bind="foreach: results">
+                    <li>
+                        <span data-bind="text: title"></span>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="areasContainer" data-bind="if: 'areas' == currentPage()">
             <h1>Areas</h1>

@@ -13,6 +13,7 @@ function FeaturesViewModel() {
     self.user = ko.observable();
     self.currentPage = ko.observable();
     self.userLoginForm = new User({name:"", password:""});
+    self.features = ko.observable();
 
     // Behaviors
     self.logout = function(){
@@ -53,7 +54,7 @@ function FeaturesViewModel() {
 
             switch (currentPage) {
                 case "features":
-                    
+                    self.getFeatures();
                     break;
             
                 default:
@@ -65,6 +66,20 @@ function FeaturesViewModel() {
             this.app.runRoute('get', '#home')
         });
     }).run();
+
+    self.getFeatures = function(){
+        name = self.user().name;
+        password = self.user().password;
+        self.client.get("api/features/", {}, name, password, 
+        function(data, status)
+        {
+            console.log(data)
+            self.features(data);
+        },
+        function(error){
+            toastr.error("Error");     
+        });     
+    }
 };
 
 ko.applyBindings(new FeaturesViewModel());

@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "${workspaceFolder}\\testenv\\Scripts\\python.exe",
+    "python.pythonPath": "${workspaceFolder}/testenv/bin/python3",
     "python.linting.pylintEnabled": false
 }

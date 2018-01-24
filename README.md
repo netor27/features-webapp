@@ -16,6 +16,18 @@ This consist in a Knockout.js single page application and a Restful API with the
 
 This app can be started using docker or running the stand-alone service.
 
+# Getting the project
+
+* Clone the repository in any directory you want with:
+```shell
+git clone git@github.com:netor27/features-webapp.git
+```
+
+* Change directory with:
+```shell
+cd features-webapp/
+```
+
 # Start the service with docker-compose (Recommended)
 
 * Install [docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/)
@@ -29,7 +41,7 @@ sudo docker-compose up -d
 
 This will initialize the containers (one with a postgreSQL database and another with the flask app).
 
-* Open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database with demo data (Take note on one of the user/password combinations that were printed out).
+* For demo purposes, you can seed the app with demo data. Just open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
 
 That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000)
 

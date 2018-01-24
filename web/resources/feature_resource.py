@@ -1,8 +1,6 @@
 from datetime import datetime
-from flask import request
-from flask_restful import Resource
+from flask import request, jsonify
 from sqlalchemy.exc import SQLAlchemyError
-from flask_httpauth import HTTPBasicAuth
 
 from web.helpers import PaginationHelper
 from web.models import Feature, FeatureSchema, Client, Area

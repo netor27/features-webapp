@@ -1,6 +1,4 @@
 from web.models import Area, Client, User, Feature
-from datetime import date
-from web.db import db
 from web.helpers.seed_static_data import users, areas, clients, features
 
 class DataSeedHelper():
@@ -23,7 +21,7 @@ class DataSeedHelper():
     def create_clients(self):
         for c in clients:
             if Client.is_unique(id=0, name=c):
-                client = Client(c)
+                client = Client(c) 
                 client.add(client)
 
 
@@ -53,3 +51,4 @@ class DataSeedHelper():
                     client=client,
                     area=area)
                 feature.add(feature)
+

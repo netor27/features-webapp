@@ -1,13 +1,12 @@
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.exc import SQLAlchemyError
-from flask_httpauth import HTTPBasicAuth
 
 from web.helpers import PaginationHelper
 from web.models import UserSchema, User
 from web.resources import AuthRequiredResource, auth
 from web.status import status
-
+from web.db import db
 
 user_schema = UserSchema()
 

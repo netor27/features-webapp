@@ -1,16 +1,14 @@
-from flask import request
-from flask_restful import Resource
+from flask import request, jsonify
 from sqlalchemy.exc import SQLAlchemyError
-from flask_httpauth import HTTPBasicAuth
 
 from web.helpers import PaginationHelper
 from web.models import Area, AreaSchema
 from web.resources import AuthRequiredResource
 from web.status import status
+from web.db import db
 
 
 area_schema = AreaSchema()
-
 
 class AreaResource(AuthRequiredResource):
     def get(self, id):

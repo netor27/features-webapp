@@ -3,73 +3,130 @@
 
 <head>
     <title>Demo Features App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="/static/css/site.css">
 </head>
 
 <body data-gr-c-s-loaded="true">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Features App</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <div id="NavViewModel">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Features App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item" data-bind="if: user">
-                    <a class="nav-link" href="#features">Features</a>
-                </li>
-                <li class="nav-item" data-bind="if: user">
-                    <a class="nav-link" href="#clients">Clients</a>
-                </li>
-                <li class="nav-item" data-bind="if: user">
-                    <a class="nav-link" href="#areas">Areas</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav" data-bind="if: user">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span data-bind="text: user().name"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#" data-bind="click: logout">Logout</a>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" data-bind="ifnot: user">
-                <input class="form-control mr-sm-2" type="text" placeholder="User Name" aria-label="User Name" data-bind="value: userLoginForm.name">
-                <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" data-bind="value: userLoginForm.password">
-                <button class="btn btn-outline-info my-2 my-sm-0" data-bind="click: login">Login</button>
-            </form>
-        </div>
-    </nav>
-    <div class="container-fluid bg-3 ">
-        <div class="homeContainer" data-bind="if: 'home' == currentPage()">
-            <h1>Home</h1>
-        </div>
-        <div class="featuresContainer" data-bind="if: 'features' == currentPage()">
-            <div data-bind="with: features">
-                <h1>Features</h1>
-                <ul data-bind="foreach: results">
-                    <li>
-                        <span data-bind="text: title"></span>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item" data-bind="css: { active: currentPage() == 'home' }">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item" data-bind="if: username, css: { active: currentPage() == 'home' }">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item" data-bind="if: username, css: { active: currentPage() == 'home' }">
+                        <a class="nav-link" href="#clients">Clients</a>
+                    </li>
+                    <li class="nav-item" data-bind="if: username, css: { active: currentPage() == 'home' }">
+                        <a class="nav-link" href="#areas">Areas</a>
                     </li>
                 </ul>
+                <ul class="navbar-nav" data-bind="if: username">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span data-bind="text: username"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="#" data-bind="click: logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0" data-bind="ifnot: username">
+                    <input class="form-control mr-sm-2" type="text" placeholder="User Name" aria-label="User Name" data-bind="value: loginFormUsername">
+                    <input class="form-control mr-sm-2" type="password" placeholder="Password" aria-label="Password" data-bind="value: loginFormPassword">
+                    <button class="btn btn-outline-info my-2 my-sm-0" data-bind="click: login">Login</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+    <div class="container bg-3">
+        <div id="HomeViewModel">
+            <div data-bind="if: show">
+                <h1>Home</h1>
             </div>
         </div>
-        <div class="areasContainer" data-bind="if: 'areas' == currentPage()">
-            <h1>Areas</h1>
+        <div id="FeaturesViewModel">
+            <div data-bind="if: show">
+                <h1>Features</h1>
+                <div data-bind="with: features">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Priority</th>
+                                <th scope="col">Target Date</th>
+                                <th scope="col">Product Area</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ko foreach: results -->
+                            <tr>
+                                <th scope="row" data-bind="text: id"></th>
+                                <td data-bind="text: title"></td>                                
+                                <td data-bind="text: client.name"></td>
+                                <td data-bind="text: client_priority"></td>
+                                <td data-bind="text: target_date"></td>    
+                                <td data-bind="text: area.name"></td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                    <nav aria-label="Feature page navigation">
+                            <ul class="pagination" data-bind="foreach: pages">
+                              <li class="page-item"><a class="page-link" data-bind="text: $index, click: changePage($index)" href="#"></a></li>
+                            </ul>
+                          </nav>
+                    <p><strong>Total number of features =<span data-bind="text: count"></strong></span></p>
+                    </h3>
+                </div>
+            </div>
         </div>
-        <div class="clientsContainer" data-bind="if: 'clients' == currentPage()">
-            <h1>Clients</h1>
+        <div id="ClientsViewModel">
+            <div data-bind="if: show">
+                <h1>Clients</h1>
+                <div data-bind="with: clients">
+                    <ul data-bind="foreach: results">
+                        <li>
+                            <span data-bind="text: name"></span>
+                        </li>
+                    </ul>
+                    <h3>Total number of clients =
+                        <span data-bind="text: count"></span>
+                    </h3>
+                </div>
+            </div>
         </div>
-    </div>
+        <div id="AreasViewModel">
+            <div data-bind="if: show">
+                <h1>Areas</h1>
+                <div data-bind="with: areas">
+                    <ul data-bind="foreach: results">
+                        <li>
+                            <span data-bind="text: name"></span>
+                        </li>
+                    </ul>
+                    <h3>Total number of areas =
+                        <span data-bind="text: count"></span>
+                    </h3>
+                </div>
+            </div>
+        </div>
 
+    </div>
     <footer class="container-fluid text-center">
         <p>Footer Text</p>
     </footer>

@@ -1,47 +1,39 @@
+function AjaxHelper(username, password) {
+    self = this;
+    self.username = username;
+    self.password = password;
 
-function make_base_auth(user, password) {
-    var tok = user + ':' + password;
-    var hash = btoa(tok);
-    return "Basic " + hash;
-}
-
-function AjaxHelper() {
-    
-    function get(url, data, username, password,  onSuccess, onError) {
-        client(url, data, "GET", username, password, onSuccess, onError);
+    self.get = function (url, data, onSuccess, onError) {
+        client(url, data, "GET", onSuccess, onError);
     };
 
-    function post(url, data, username, password, onSuccess, onError) {
-        client(url, data, "POST", username, password, onSuccess, onError);
+    self.post = function (url, data, onSuccess, onError) {
+        client(url, data, "POST", onSuccess, onError);
     };
 
-    function patch(url, data, username, password, onSuccess, onError) {
-        client(url, data, "PATCH", username, password, onSuccess, onError);
+    self.patch = function (url, data, onSuccess, onError) {
+        client(url, data, "PATCH", onSuccess, onError);
     };
 
-    function client(url, data, type, username, password, onSuccess, onError) {
+    function client(url, data, type, onSuccess, onError) {
         $.ajax
             ({
                 type: type,
                 url: url,
+                contentType: "application/json",
+                accepts: "application/json",
+                cache: false,
                 dataType: 'json',
                 async: true,
                 data: data,
-                name: username,
-                password: password,
                 success: onSuccess,
                 error: onError,
-                beforeSend: function (xhr){ 
-                    xhr.setRequestHeader('Authorization', make_base_auth(username, password)); 
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization',
+                    "Basic " + btoa(self.username + ":" + self.password));
                 },
             });
     }
-
-    return {
-        get: get,
-        post:post,
-        patch:patch
-    };
 }
 
 

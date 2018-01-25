@@ -73,7 +73,7 @@ class FeatureResource(AuthRequiredResource):
         except SQLAlchemyError as e:
             db.session.rollback()
             resp = jsonify({"error": str(e)})
-            return resp, status.HTTP_401_UNAUTHORIZED
+            return resp, status.HTTP_400_BAD_REQUEST
 
 
 class FeatureListResource(AuthRequiredResource):
@@ -83,7 +83,8 @@ class FeatureListResource(AuthRequiredResource):
             query=Feature.query,
             resource_for_url='api.featurelistresource',
             key_name='results',
-            schema=feature_schema)
+            schema=feature_schema,
+            order_by=Feature.id)
         result = pagination_helper.paginate_query()
         return result
 

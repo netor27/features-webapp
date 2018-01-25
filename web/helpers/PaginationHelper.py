@@ -3,7 +3,7 @@ from flask import current_app
 
 
 class PaginationHelper():
-    def __init__(self, request, query, resource_for_url, key_name, schema):
+    def __init__(self, request, query, resource_for_url, key_name, schema, order_by=None):
         self.request = request
         self.query = query
         self.resource_for_url = resource_for_url
@@ -11,12 +11,15 @@ class PaginationHelper():
         self.schema = schema
         self.page_size_argument_name = current_app.config['PAGINATION_PAGE_SIZE_ARGUMENT_NAME']
         self.page_argument_name = current_app.config['PAGINATION_PAGE_ARGUMENT_NAME']
+        self.order_by = order_by
 
     def paginate_query(self):
         # If no page number is specified, we assume the request wants page #1
-        page_number = self.request.args.get(self.page_argument_name, 1, type=int)
-        results_per_page = self.request.args.get(self.page_size_argument_name, 5, type=int)
-        paginated_objects = self.query.paginate(
+        page_number = self.request.args.get(
+            self.page_argument_name, 1, type=int)
+        results_per_page = self.request.args.get(
+            self.page_size_argument_name, 5, type=int)
+        paginated_objects = self.query.order_by(self.order_by).paginate(
             page_number,
             per_page=results_per_page,
             error_out=False)

@@ -242,7 +242,7 @@ class FeatureListResource(AuthRequiredResource):
             resource_for_url='api.featurelistresource',
             key_name='results',
             schema=feature_schema,
-            order_by=Feature.id)
+            order_by=Feature.client_priority)
         result = pagination_helper.paginate_query()
         return result
 
@@ -306,3 +306,85 @@ class FeatureListResource(AuthRequiredResource):
             db.session.rollback()
             resp = {"error": str(e)}
             return resp, status.HTTP_400_BAD_REQUEST
+
+class FeatureListByAreaResource(AuthRequiredResource):
+    def get(self, id):
+        """
+        Features
+        Method to query features from a specific Area
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: id
+            in: path
+            type: int
+            required: true
+            description: The area Id
+          - name: page
+            in: path
+            type: int
+            required: false
+            description: The page to query
+          - name: size
+            in: path
+            type: int
+            required: false
+            description: The page size
+        responses:
+          200:
+            description: A Features list detail
+            schema:
+              $ref: '#/definitions/FeaturesList'
+        """ 
+        pagination_helper = PaginationHelper(
+            request,
+            query=Feature.query.filter_by(area_id=id),
+            resource_for_url='api.featurelistbyarearesource',
+            key_name='results',
+            schema=feature_schema,
+            order_by=Feature.client_priority,
+            paginate_id=id)
+        result = pagination_helper.paginate_query()
+        return result
+
+class FeatureListByClientResource(AuthRequiredResource):
+    def get(self, id):
+        """
+        Features
+        Method to query features from a specific Client
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: id
+            in: path
+            type: int
+            required: true
+            description: The client Id
+          - name: page
+            in: path
+            type: int
+            required: false
+            description: The page to query
+          - name: size
+            in: path
+            type: int
+            required: false
+            description: The page size
+        responses:
+          200:
+            description: A Features list detail
+            schema:
+              $ref: '#/definitions/FeaturesList'
+        """ 
+        pagination_helper = PaginationHelper(
+            request,
+            query=Feature.query.filter_by(client_id=id),
+            resource_for_url='api.featurelistbyclientresource',
+            key_name='results',
+            schema=feature_schema,
+            order_by=Feature.client_priority,
+            paginate_id=id)
+        result = pagination_helper.paginate_query()
+        return result

@@ -2,8 +2,9 @@ from .auth_resource import AuthRequiredResource, auth
 from .area_resource import AreaResource, AreaListResource
 
 from .client_resource import ClientResource, ClientListResource
-from .feature_resource import FeatureResource, FeatureListResource
+from .feature_resource import FeatureResource, FeatureListResource, FeatureListByAreaResource, FeatureListByClientResource
 from .user_resource import UserResource, UserListResource, UserLoginResource
 
 __all__ = ['AuthRequiredResource', 'auth', 'AreaResource', 'AreaListResource', 'ClientResource',
-           'ClientListResource', 'FeatureResource', 'FeatureListResource', 'UserResource', 'UserListResource', 'UserLoginResource']
+           'ClientListResource', 'FeatureResource', 'FeatureListResource', 'UserResource', 'UserListResource', 
+           'UserLoginResource', 'FeatureListByAreaResource', 'FeatureListByClientResource']

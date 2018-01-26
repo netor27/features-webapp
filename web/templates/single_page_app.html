@@ -73,7 +73,7 @@
         </div>
         <div id="FeaturesViewModel">
             <div data-bind="if: show">
-                <h1>Feature Requests</h1>
+                <h1>Feature Requests by client priority</h1>
                 <div data-bind="ifnot: viewIsReady">
                     <div class="loading">Loading&#8230;</div>
                 </div>
@@ -82,9 +82,9 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Client Name</th>
                                 <th scope="col">Priority</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Client Name</th>                                
                                 <th scope="col">Target Date</th>
                                 <th scope="col">Product Area</th>
                                 <th scope="col">
@@ -97,13 +97,14 @@
                             <!-- ko foreach: results -->
                             <tr>
                                 <th scope="row" data-bind="text: id"></th>
+                                <td data-bind="text: client_priority"></td>
                                 <td>
                                     <a data-bind="attr:{ href: '#feature/'+$data.id }, text: title"></a>
                                 </td>
                                 <td>
                                     <a data-bind="attr:{ href: '#client/'+$data.client.id }, text: client.name"></a>
                                 </td>
-                                <td data-bind="text: client_priority"></td>
+                                
                                 <td data-bind="text: target_date"></td>
                                 <td>
                                     <a data-bind="attr:{ href: '#area/'+$data.area.id }, text: area.name"></a>
@@ -388,7 +389,6 @@
 
             </div>
         </div>
-
         <div id="ClientDetailViewModel">
             <div data-bind="if: show">
                 <div class="row">

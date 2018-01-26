@@ -293,5 +293,102 @@ class FeaturesTests(TestCase):
             priority = features[i]['client_priority']
             self.assertEqual(priority, id+1)
 
-        
+    def test_retrieve_features_list_by_area(self):
+        """
+        Ensure we can retrieve the features list for an area
+        """
+        # create our user so we can authenticate
+        res = self.ph.create_user(self.test_user_name, self.test_user_password)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED,
+                         res.get_data(as_text=True))
+
+        # create 4 features and assert the response
+        for i in range(1, 5):
+            title = 'New Feature Title {}'.format(i)
+            description = 'Description {}'.format(i)
+            target_date = date(2018, 6, i)
+            priority = i
+            client = "Client"
+            area = "Billing"
+            post_res = self.ph.create_feature(
+                title, description, target_date, priority, client, area)
+            self.assertEqual(
+                post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+
+        # create another 4 features but for another area
+        for i in range(1, 5):
+            title = 'New Feature Title {}'.format(i)
+            description = 'Description {}'.format(i)
+            target_date = date(2018, 6, i)
+            priority = i
+            client = "Client"
+            area = "Claims"
+            post_res = self.ph.create_feature(
+                title, description, target_date, priority, client, area)
+            self.assertEqual(
+                post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+
+        # assert we only have this 8
+        self.assertEqual(Feature.query.count(), 8)
+
+        # retrieve the complete list of features for the first client, it should return only the 4 we created
+        url = url_for('api.featurelistbyarearesource', id = 1, _external=True)
+        res = self.test_client.get(
+            url,
+            headers=self.ph.get_authentication_headers())
+        res_data = json.loads(res.get_data(as_text=True))
+        self.assertEqual(res.status_code, status.HTTP_200_OK,
+                         res.get_data(as_text=True))
+        self.assertEqual(res_data['count'], 4)
+
+
+    def test_retrieve_features_list_by_client(self):
+        """
+        Ensure we can retrieve the features list for a client
+        """
+        # create our user so we can authenticate
+        res = self.ph.create_user(self.test_user_name, self.test_user_password)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED,
+                         res.get_data(as_text=True))
+
+        # create 4 features and assert the response
+        for i in range(1, 5):
+            title = 'New Feature Title {}'.format(i)
+            description = 'Description {}'.format(i)
+            target_date = date(2018, 6, i)
+            priority = i
+            client = "Client"
+            area = "Billing"
+            post_res = self.ph.create_feature(
+                title, description, target_date, priority, client, area)
+            self.assertEqual(
+                post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+
+        # create another 4 features but for another area
+        for i in range(1, 5):
+            title = 'New Feature Title {}'.format(i)
+            description = 'Description {}'.format(i)
+            target_date = date(2018, 6, i)
+            priority = i
+            client = "Client 2"
+            area = "Billing"
+            post_res = self.ph.create_feature(
+                title, description, target_date, priority, client, area)
+            self.assertEqual(
+                post_res.status_code, status.HTTP_201_CREATED, post_res.get_data(as_text=True))
+
+        # assert we only have this 8
+        self.assertEqual(Feature.query.count(), 8)
+
+        # retrieve the complete list of features for the first client, it should return only the 4 we created
+        url = url_for('api.featurelistbyclientresource', id = 1, _external=True)
+        res = self.test_client.get(
+            url,
+            headers=self.ph.get_authentication_headers())
+        res_data = json.loads(res.get_data(as_text=True))
+        self.assertEqual(res.status_code, status.HTTP_200_OK,
+                         res.get_data(as_text=True))
+        self.assertEqual(res_data['count'], 4)
+
+
                 

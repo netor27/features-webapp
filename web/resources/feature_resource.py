@@ -15,11 +15,113 @@ feature_schema = FeatureSchema()
 class FeatureResource(AuthRequiredResource):
 
     def get(self, id):
+        """
+        Features
+        Method to retrieve a single Feature
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: id
+            in: path
+            type: int
+            required: true
+            description: The feature Id
+        responses:
+          200:
+            description: A Feature detail
+            schema:
+              id: Feature
+              properties:
+                id:
+                  type: int
+                  description: The feature Id
+                  default: 0
+                title:
+                  type: string
+                  description: The title of the Feature
+                  default: "Feature Name String"
+                url:
+                  type: string
+                  description: The resource url that points to this feature
+                  default: "http://someurl.com/api/features/0"
+                description:
+                  type: string
+                  description: The description of the Feature
+                  default: "Long Description string"
+                target_date:
+                  type: date
+                  description: The target date of this feature
+                  default: "2018-06-15"
+                client_priority:
+                  type: int
+                  description: The priority a client established for this feature
+                  default: 0
+                creation_date:
+                  type: dateTime
+                  description: The date and time when this feature was created in the db
+                  default: "2018-01-22T14:34:11.770289+00:00"
+                area:
+                  type: object
+                  schema:
+                    $ref: '#/definitions/Area'
+                client:
+                  type: object
+                  schema:
+                    $ref: '#/definitions/Client'
+        """ 
         feature = Feature.query.get_or_404(id)
         result = feature_schema.dump(feature).data
         return result
 
     def patch(self, id):
+        """
+        Features
+        Method to update a single Feature
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: id
+            in: path
+            type: int
+            required: true
+            description: The feature Id
+          - in: body
+            name: body
+            schema:
+              id: FeatureToUpdate
+              properties:
+                title:
+                  type: string
+                  description: The title of the Feature
+                  default: "Feature Name String"
+                description:
+                  type: string
+                  description: The description of the Feature
+                  default: "Long Description string"
+                target_date:
+                  type: date
+                  description: The target date of this feature
+                  default: "2018-06-15"
+                client_priority:
+                  type: int
+                  description: The priority a client established for this feature
+                  default: 0
+                area:                
+                  type: string
+                  description: The area name
+                  default: "Area 1"
+                client:
+                  type: string
+                  description: The client name
+                  default: "Client A"
+        responses:
+          200:
+            description: The updated feature
+            schema:
+              $ref: '#/definitions/Feature'              
+        """
         feature = Feature.query.get_or_404(id)
         feature_dict = request.get_json(force=True)
         if 'title' in feature_dict:
@@ -65,6 +167,22 @@ class FeatureResource(AuthRequiredResource):
             return resp, status.HTTP_400_BAD_REQUEST
 
     def delete(self, id):
+        """
+        Features
+        Method to delete a single Feature
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: id
+            in: path
+            type: int
+            required: true
+            description: The feature Id
+        responses:
+          204:
+            description: No content
+        """
         feature = Feature.query.get_or_404(id)
         try:
             delete = feature.delete(feature)
@@ -78,6 +196,46 @@ class FeatureResource(AuthRequiredResource):
 
 class FeatureListResource(AuthRequiredResource):
     def get(self):
+        """
+        Features
+        Method to query features
+        ---
+        tags:
+          - Features
+        parameters:
+          - name: page
+            in: path
+            type: int
+            required: false
+            description: The page to query
+          - name: size
+            in: path
+            type: int
+            required: false
+            description: The page size
+        responses:
+          200:
+            description: A Features list detail
+            schema:
+              id: FeaturesList
+              properties:
+                results:
+                  type: array
+                  items: 
+                    $ref: '#/definitions/Feature'
+                previous:
+                  type: string
+                  description: The resource url that points to the previous page
+                  default: "http://someurl.com/api/features/?page=1&size=5"
+                next:
+                  type: string
+                  description: The resource url that points to the next page
+                  default: "http://someurl.com/api/features/?page=3&size=5"
+                count:
+                  type: int
+                  description: The total count of features in the db
+                  default: 10
+        """ 
         pagination_helper = PaginationHelper(
             request,
             query=Feature.query,
@@ -89,6 +247,23 @@ class FeatureListResource(AuthRequiredResource):
         return result
 
     def post(self):
+        """
+        Features
+        Method to create a new Feature
+        ---
+        tags:
+          - Features
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/FeatureToUpdate'
+        responses:
+          201:
+            description: The updated feature
+            schema:
+              $ref: '#/definitions/Feature'              
+        """
         request_dict = request.get_json()
         if not request_dict:
             response = {'message': 'No input data provided'}

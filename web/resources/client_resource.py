@@ -46,7 +46,7 @@ class ClientResource(AuthRequiredResource):
         client = Client.query.get_or_404(id)
         try:
             client.delete(client)
-            response = {}
+            response = {"status": status.HTTP_204_NO_CONTENT}
             return response, status.HTTP_204_NO_CONTENT
         except SQLAlchemyError as e:
             db.session.rollback()

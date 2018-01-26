@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from sqlalchemy.exc import SQLAlchemyError
 
 from web.helpers import PaginationHelper
@@ -45,11 +45,11 @@ class AreaResource(AuthRequiredResource):
         area = Area.query.get_or_404(id)
         try:
             area.delete(area)
-            response = {}
+            response = {"status": status.HTTP_204_NO_CONTENT}
             return response, status.HTTP_204_NO_CONTENT
         except SQLAlchemyError as e:
             db.session.rollback()
-            resp = jsonify({"error": str(e)})
+            resp = {"error": str(e)}
             return resp, status.HTTP_400_BAD_REQUEST
 
 

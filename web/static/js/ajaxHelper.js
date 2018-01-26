@@ -15,6 +15,10 @@ function AjaxHelper(username, password) {
         client(url, data, "PATCH", onSuccess, onError);
     };
 
+    self.delete = function (url, data, onSuccess, onError) {
+        client(url, data, "DELETE", onSuccess, onError);
+    };
+
     function client(url, data, type, onSuccess, onError) {
         $.ajax
             ({

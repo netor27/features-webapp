@@ -1,43 +1,115 @@
 <!doctype html>
-<title>Demo Feature App</title>
-<html>
-    <h4><a href="/">Return home</a></h4>
+<html lang="en">
 
-    <h2>The database has been seeded with demo data.</h2>
-    <h3>Users:</h3>
-    <ul>
-    {% for key, value in users.items() %}
-        <li> {{ key }} : {{ value }} </li>
-    {% endfor %}
-    </ul>
-    <h3>Areas:</h3>
-    <ul>
-    {% for a in areas %}
-        <li> {{ a }}</li>
-    {% endfor %}
-    </ul>
-    <h3>Clients:</h3>
-    <ul>
-    {% for c in clients %}
-        <li> {{ c }}</li>
-    {% endfor %}
-    </ul>
+<head>
+    <title>Demo Features App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
 
-    <h3>Features:</h3>
-    <ul>
-    {% for f in features %}
-        <li> 
-            {{ f['title'] }}
-            <ul>
-                <li>Description: {{ f['description'] }}</li>
-                <li>Client Priority: {{ f['client_priority'] }}</li>
-                <li>Target Date: {{ f['target_date'] }}</li>
-                <li>Area: {{ f['area'] }}</li>
-                <li>Client: {{ f['client'] }}</li>
-            </ul>
-        </li>
-    {% endfor %}
-    </ul>
+<body data-gr-c-s-loaded="true">
+    <div id="NavViewModel">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">Features App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-    
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <h2 class="text-center">The database has been seeded with demo data.</h2>
+        <h4 class="text-center">You can close this page now.</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Users</th>
+                            <th scope="col">Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in users.items() %}
+                        <tr>
+                            <th>{{ key }}</th>
+                            <td>{{ value }} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Areas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in areas %}
+                        <tr>
+                            <th>{{ a }}</th>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Clients</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in clients %}
+                        <tr>
+                            <th>{{ c }}</th>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <h3 class="text-center">Features</h3>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Client Priority</th>
+                    <th scope="col">Target Date</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Client</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in features %}
+                <tr>
+                    <th>{{ f['title'] }}</th>
+                    <th>{{ f['description'] }}</th>
+                    <th>{{ f['client_priority'] }}</th>
+                    <th>{{ f['target_date'] }}</th>
+                    <th>{{ f['area'] }}</th>
+                    <th>{{ f['client'] }}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+
 </html>

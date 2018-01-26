@@ -5,7 +5,7 @@
 
 
 # features-webapp
-This a demo site based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python and Flask.
+This a demo site based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python, Flask and KnockoutJs.
 This consist in a Knockout.js single page application and a Restful API with the following resources:
 
 * features : Information about a specific feature that a client requested (title, description, priority, target date, area, etc. )

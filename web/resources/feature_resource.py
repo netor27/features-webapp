@@ -29,7 +29,7 @@ class FeatureResource(AuthRequiredResource):
         if 'target_date' in feature_dict:
             feature.target_date = datetime.strptime(feature_dict['target_date'], "%Y-%m-%d")
         if 'client_priority' in feature_dict:
-            feature.client_priority = feature_dict['client_priority']
+            feature.client_priority = int(feature_dict['client_priority'])
         if 'client' in feature_dict:
             client_name = feature_dict['client']
             client = Client.query.filter_by(name=client_name).first()
@@ -68,7 +68,7 @@ class FeatureResource(AuthRequiredResource):
         feature = Feature.query.get_or_404(id)
         try:
             delete = feature.delete(feature)
-            response = {}
+            response = {"status": status.HTTP_204_NO_CONTENT}
             return response, status.HTTP_204_NO_CONTENT
         except SQLAlchemyError as e:
             db.session.rollback()

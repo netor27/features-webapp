@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link rel="stylesheet" href="/static/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="/static/css/ionicons.css">
 </head>
 
 <body data-gr-c-s-loaded="true">
@@ -52,14 +53,27 @@
         </nav>
     </div>
     <div class="container bg-3">
-        <div id="HomeViewModel">
+        <div id="HomeViewModel" class="text-center">
             <div data-bind="if: show">
-                <h1>Home</h1>
+                <div class="jumbotron">
+                    <h1>Welcome to Features App Demo</h1>
+                    <p class="lead">
+                        This a demo site based on
+                        <a href="https://github.com/IntuitiveWebSolutions/EngineeringMidLevel">this requirements</a> built with Python, Flask and KnockoutJs. The source code is
+                        <a href="https://github.com/netor27/features-webapp">here.</a>
+                    </p>
+                    <p class="lead">You can check the API documentation
+                        <a href="/apidocs/" target="_blank">here.</a>
+                    </p>
+                    <p class="lead">And click
+                        <a href="/admin/initialize_demo_data" target="_blank">here</a> to seed the app with demo data.</p>
+                </div>
             </div>
         </div>
         <div id="FeaturesViewModel">
             <div data-bind="if: show">
-                <h1>Features</h1>
+                <h1>Feature Requests</h1>
+
                 <div data-bind="with: features">
                     <table class="table table-hover">
                         <thead>
@@ -70,43 +84,68 @@
                                 <th scope="col">Priority</th>
                                 <th scope="col">Target Date</th>
                                 <th scope="col">Product Area</th>
+                                <th scope="col">
+                                    <a class="btn btn-outline-primary btn-sm" href="#feature/add">
+                                        <i class="icon ion-plus-round"></i> Add</a>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- ko foreach: results -->
                             <tr>
                                 <th scope="row" data-bind="text: id"></th>
-                                <td data-bind="text: title"></td>                                
-                                <td data-bind="text: client.name"></td>
+                                <td>
+                                    <a data-bind="attr:{ href: '#feature/'+$data.id }, text: title"></a>
+                                </td>
+                                <td>
+                                    <a data-bind="attr:{ href: '#client/'+$data.client.id }, text: client.name"></a>
+                                </td>
                                 <td data-bind="text: client_priority"></td>
-                                <td data-bind="text: target_date"></td>    
-                                <td data-bind="text: area.name"></td>
+                                <td data-bind="text: target_date"></td>
+                                <td>
+                                    <a data-bind="attr:{ href: '#area/'+$data.area.id }, text: area.name"></a>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bind="click: $root.showModalDelete">
+                                        <i class="icon ion-ios-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <!-- /ko -->
                         </tbody>
                     </table>
-                    <nav aria-label="Feature page navigation">
-                            <ul class="pagination" data-bind="foreach: pages">
-                              <li class="page-item"><a class="page-link" data-bind="text: $index, click: changePage($index)" href="#"></a></li>
-                            </ul>
-                          </nav>
-                    <p><strong>Total number of features =<span data-bind="text: count"></strong></span></p>
-                    </h3>
+                    <p class="text-right">
+                        <strong>
+                            <span data-bind="text: count"></span> features in total
+                        </strong>
+                    </p>
                 </div>
-            </div>
-        </div>
-        <div id="ClientsViewModel">
-            <div data-bind="if: show">
-                <h1>Clients</h1>
-                <div data-bind="with: clients">
-                    <ul data-bind="foreach: results">
-                        <li>
-                            <span data-bind="text: name"></span>
+
+                <nav aria-label="Feature page navigation">
+                    <ul class="pagination justify-content-center" data-bind="foreach: pages">
+                        <li class="page-item" data-bind="css: {active: $data == $root.page()}">
+                            <button class="page-link" data-bind="text: $data,click: $root.changePage"></button>
                         </li>
                     </ul>
-                    <h3>Total number of clients =
-                        <span data-bind="text: count"></span>
-                    </h3>
+                </nav>
+                <div id="featureDeleteModal" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete Feature</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this feature?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bind="click: deleteFeature">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,21 +153,251 @@
             <div data-bind="if: show">
                 <h1>Areas</h1>
                 <div data-bind="with: areas">
-                    <ul data-bind="foreach: results">
-                        <li>
-                            <span data-bind="text: name"></span>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product Area</th>
+                                <th scope="col">
+                                    <a class="btn btn-outline-primary btn-sm" href="#area/add">
+                                        <i class="icon ion-plus-round"></i> Add</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ko foreach: results -->
+                            <tr>
+                                <th scope="row" data-bind="text: id"></th>
+                                <td>
+                                    <a data-bind="attr:{ href: '#area/'+$data.id }, text: name"></a>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bind="click: $root.showModalDelete">
+                                        <i class="icon ion-ios-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                    <p class="text-right">
+                        <strong>
+                            <span data-bind="text: count"></span> areas in total
+                        </strong>
+                    </p>
+                </div>
+
+                <nav aria-label="Area page navigation">
+                    <ul class="pagination justify-content-center" data-bind="foreach: pages">
+                        <li class="page-item" data-bind="css: {active: $data == $root.page()}">
+                            <button class="page-link" data-bind="text: $data,click: $root.changePage"></button>
                         </li>
                     </ul>
-                    <h3>Total number of areas =
-                        <span data-bind="text: count"></span>
-                    </h3>
+                </nav>
+                <div id="areaDeleteModal" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete Area</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this area?
+                                    <br/>This will delete any feature related to this area</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bind="click: deleteArea">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ClientsViewModel">
+            <div data-bind="if: show">
+                <h1>Clients</h1>
+                <div data-bind="with: clients">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Product Client</th>
+                                <th scope="col">
+                                    <a class="btn btn-outline-primary btn-sm" href="#client/add">
+                                        <i class="icon ion-plus-round"></i> Add</a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- ko foreach: results -->
+                            <tr>
+                                <th scope="row" data-bind="text: id"></th>
+                                <td>
+                                    <a data-bind="attr:{ href: '#client/'+$data.id }, text: name"></a>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm" data-bind="click: $root.showModalDelete">
+                                        <i class="icon ion-ios-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                    <p class="text-right">
+                        <strong>
+                            <span data-bind="text: count"></span> clients in total
+                        </strong>
+                    </p>
+                </div>
+
+                <nav aria-label="Client page navigation">
+                    <ul class="pagination justify-content-center" data-bind="foreach: pages">
+                        <li class="page-item" data-bind="css: {active: $data == $root.page()}">
+                            <button class="page-link" data-bind="text: $data,click: $root.changePage"></button>
+                        </li>
+                    </ul>
+                </nav>
+                <div id="clientDeleteModal" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Delete Client</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this client?
+                                    <br/>This will delete any feature related to this client</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bind="click: deleteClient">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <div id="FeatureDetailViewModel">
+            <div data-bind="if: show">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <h4 class="mb-3">Feature Request</h4>
+                        <form class="needs-validation" novalidate="">
+                            <div class="mb-3">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" placeholder="Title" required="" data-bind="value: title">
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    Valid title is required.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" id="description" data-bind="value: description" rows="6"></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter a valid description.
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="client">Client</label>
+                                    <select class="custom-select d-block w-100" id="client" required="" data-bind="value: client">
+                                        <option value="">Choose...</option>
+                                        <!-- ko foreach: clients -->
+                                        <option data-bind="value: name, text: name"></option>
+                                        <!-- /ko -->
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a valid client.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="area">Product Area</label>
+                                    <select class="custom-select d-block w-100" id="area" required="" data-bind="value: area">
+                                        <option value="">Choose...</option>
+                                        <!-- ko foreach: areas -->
+                                        <option data-bind="value: name, text: name"></option>
+                                        <!-- /ko -->
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please provide a valid product area.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="client">Target Date</label>
+                                    <input type="text" class="datepicker form-control" id="targetDate" data-date-format="mm/dd/yyyy" required="" class="is-invalid" data-bind="value: targetDate">
+                                    <div class="invalid-feedback">
+                                        Please select a valid date.
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="clientPriority">Client Priority</label>
+                                    <input type="text" class="form-control" id="clientPriority" placeholder="" required="" data-bind="value: clientPriority">
+                                    <div class="invalid-feedback" style="width: 100%;">
+                                        Valid priority is required.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-lg btn-block col-md-6 offset-md-3" type="submit" data-bind="text: buttonText, click: submitForm"></button>
+                        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
     </div>
+
     <footer class="container-fluid text-center">
-        <p>Footer Text</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -137,6 +406,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sammy.js/0.7.6/sammy.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="/static/js/ajaxHelper.js"></script>
     <script type="text/javascript" src="/static/js/app.js"></script>
 

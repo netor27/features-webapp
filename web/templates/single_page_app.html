@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="/static/css/ionicons.css">
+    <link rel="stylesheet" href="/static/css/site.css">
 </head>
 
 <body data-gr-c-s-loaded="true">
@@ -73,7 +74,9 @@
         <div id="FeaturesViewModel">
             <div data-bind="if: show">
                 <h1>Feature Requests</h1>
-
+                <div data-bind="ifnot: viewIsReady">
+                    <div class="loading">Loading&#8230;</div>
+                </div>
                 <div data-bind="with: features">
                     <table class="table table-hover">
                         <thead>
@@ -152,6 +155,9 @@
         <div id="AreasViewModel">
             <div data-bind="if: show">
                 <h1>Areas</h1>
+                <div data-bind="ifnot: viewIsReady">
+                    <div class="loading">Loading&#8230;</div>
+                </div>
                 <div data-bind="with: areas">
                     <table class="table table-hover">
                         <thead>
@@ -219,6 +225,9 @@
         <div id="ClientsViewModel">
             <div data-bind="if: show">
                 <h1>Clients</h1>
+                <div data-bind="ifnot: viewIsReady">
+                    <div class="loading">Loading&#8230;</div>
+                </div>
                 <div data-bind="with: clients">
                     <table class="table table-hover">
                         <thead>
@@ -283,12 +292,14 @@
                 </div>
             </div>
         </div>
-
         <div id="FeatureDetailViewModel">
             <div data-bind="if: show">
                 <div class="row">
                     <div class="col-md-8 offset-md-2">
                         <h4 class="mb-3">Feature Request</h4>
+                        <div data-bind="ifnot: viewIsReady">
+                            <div class="loading">Loading&#8230;</div>
+                        </div>
                         <form class="needs-validation" novalidate="">
                             <div class="mb-3">
                                 <label for="title">Title</label>
@@ -297,7 +308,6 @@
                                     Valid title is required.
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="description">Description</label>
                                 <textarea class="form-control" id="description" data-bind="value: description" rows="6"></textarea>
@@ -305,8 +315,6 @@
                                     Please enter a valid description.
                                 </div>
                             </div>
-
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="client">Client</label>
@@ -333,11 +341,11 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="client">Target Date</label>
-                                    <input type="text" class="datepicker form-control" id="targetDate" data-date-format="mm/dd/yyyy" required="" class="is-invalid" data-bind="value: targetDate">
+                                    <input type="text" class="datepicker form-control" id="targetDate" data-date-format="mm/dd/yyyy" required="" class="is-invalid"
+                                        data-bind="value: targetDate">
                                     <div class="invalid-feedback">
                                         Please select a valid date.
                                     </div>
@@ -350,56 +358,62 @@
                                     </div>
                                 </div>
                             </div>
-
                             <button class="btn btn-primary btn-lg btn-block col-md-6 offset-md-3" type="submit" data-bind="text: buttonText, click: submitForm"></button>
                         </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </div>
                 </div>
 
+            </div>
+        </div>
+        <div id="AreaDetailViewModel">
+            <div data-bind="if: show">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <h4 class="mb-3">Product Area</h4>
+                        <div data-bind="ifnot: viewIsReady">
+                            <div class="loading">Loading&#8230;</div>
+                        </div>
+                        <form class="needs-validation" novalidate="">
+                            <div class="mb-3">
+                                <label for="areaName">Name</label>
+                                <input type="text" class="form-control" id="areaName" placeholder="Name" required="" data-bind="value: name">
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    Valid Area Name is required.
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg btn-block col-md-6 offset-md-3" type="submit" data-bind="text: buttonText, click: submitForm"></button>
+                        </form>
+                    </div>
+                </div>
 
             </div>
         </div>
-    </div>
 
+        <div id="ClientDetailViewModel">
+            <div data-bind="if: show">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <h4 class="mb-3">Product Client</h4>
+                        <div data-bind="ifnot: viewIsReady">
+                            <div class="loading">Loading&#8230;</div>
+                        </div>
+                        <form class="needs-validation" novalidate="">
+                            <div class="mb-3">
+                                <label for="clientName">Name</label>
+                                <input type="text" class="form-control" id="clientName" placeholder="Name" required="" data-bind="value: name">
+                                <div class="invalid-feedback" style="width: 100%;">
+                                    Valid Client Name is required.
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-lg btn-block col-md-6 offset-md-3" type="submit" data-bind="text: buttonText, click: submitForm"></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer class="container-fluid text-center">
     </footer>
-
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

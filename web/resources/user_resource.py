@@ -59,7 +59,8 @@ class UserListResource(Resource):
             query=User.query,
             resource_for_url='api.userlistresource',
             key_name='results',
-            schema=user_schema)
+            schema=user_schema,
+            order_by=User.id)
         result = pagination_helper.paginate_query()
         return result
 

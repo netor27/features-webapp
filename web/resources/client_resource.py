@@ -175,7 +175,8 @@ class ClientListResource(AuthRequiredResource):
             query=Client.query,
             resource_for_url='api.clientlistresource',
             key_name='results',
-            schema=client_schema)
+            schema=client_schema,
+            order_by=Client.id)
         result = pagination_helper.paginate_query()
         return result
 

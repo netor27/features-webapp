@@ -174,7 +174,8 @@ class AreaListResource(AuthRequiredResource):
             query=Area.query,
             resource_for_url='api.arealistresource',
             key_name='results',
-            schema=area_schema)
+            schema=area_schema,
+            order_by=Area.id)
         result = pagination_helper.paginate_query()
         return result
 

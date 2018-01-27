@@ -3,12 +3,12 @@ import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
-DATABASE_HOST = "database"
+DATABASE_HOST = "aa7lo76ptase7q.cknxfrk7didy.us-west-1.rds.amazonaws.com"
 DATABASE_PORT = 5432
 SQLALCHEMY_ECHO = False
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_DATABASE_URI = "postgresql://{DB_USER}:{DB_PASS}@{DB_ADDR}:{DB_PORT}/{DB_NAME}" \
-                          .format(DB_USER="apiuser", DB_PASS="password", \
+                          .format(DB_USER="apiuser", DB_PASS="P4$sW00rd!", \
                           DB_ADDR=DATABASE_HOST, DB_PORT=DATABASE_PORT, DB_NAME="features")
 SQLALCHEMY_MIGRATE_REPO = os.path.join(BASE_DIR, 'db_repository')
 PAGINATION_PAGE_SIZE_ARGUMENT_NAME = 'size'

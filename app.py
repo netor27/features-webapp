@@ -15,4 +15,4 @@ if __name__ == '__main__':
     db.create_all()
 
     # start the app
-    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=80, debug=True, use_reloader=False)

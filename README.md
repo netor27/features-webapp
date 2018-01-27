@@ -8,6 +8,8 @@
 This a demo app based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python, Flask and KnockoutJs.
 This consist in a Knockout.js single page application and a Restful API.
 
+A live demo can be found in [here](http://features-webapp.us-west-1.elasticbeanstalk.com/).
+
 This app can be started using docker or running the stand-alone service.
 
 # Getting the project
@@ -35,11 +37,11 @@ sudo docker-compose up -d
 
 This will initialize the containers (one with a postgreSQL database and another with the flask app).
 
-* For demo purposes, you can seed the app with demo data. Just open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
+* For demo purposes, you can seed the app with demo data. Just open [http://localhost:80/admin/initialize_demo_data](http://localhost:80/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
 
-That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000).
+That's it!, you can now login to the site with the previous credentials here [http://localhost:80](http://localhost:80).
 
-Also, the API docs are located in here [http://localhost:5000/apidocs/](http://localhost:5000/apidocs/).
+Also, the API docs are located in here [http://localhost:80/apidocs/](http://localhost:80/apidocs/).
 
 * To stop the containers:
 
@@ -95,11 +97,11 @@ pip install -r requirements.txt
 python app.py
 ```
 
-* For demo purposes, you can seed the app with demo data. Just open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
+* For demo purposes, you can seed the app with demo data. Just open [http://localhost:80/admin/initialize_demo_data](http://localhost:80/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
 
-That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000).
+That's it!, you can now login to the site with the previous credentials here [http://localhost:80](http://localhost:80).
 
-Also, the API docs are located in here [http://localhost:5000/apidocs/](http://localhost:5000/apidocs/).
+Also, the API docs are located in here [http://localhost:80/apidocs/](http://localhost:80/apidocs/).
 
 ## Running tests with the standalone service
 

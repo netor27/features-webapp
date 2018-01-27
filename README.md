@@ -6,7 +6,7 @@
 
 # features-webapp
 This a demo app based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python, Flask and KnockoutJs.
-This consist in a Knockout.js single page application and a Restful API.
+This demo consists in a Knockout.js single page application and a Python Restful API.
 
 A live demo can be found in [here](http://features-webapp.us-west-1.elasticbeanstalk.com/).
 

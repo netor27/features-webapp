@@ -14,7 +14,7 @@ def create_app(config_filename, waitForDb=False):
     app.debug = app.config['DEBUG']
     app.config.from_object(config_filename)        
     if waitForDb is True:
-        subprocess.call(shlex.split('./wait-for-it.sh {}:{}'.format(app.config['DATABASE_HOST'], app.config['DATABASE_PORT'])))
+        subprocess.call(shlex.split('./scripts/wait-for-it.sh {}:{}'.format(app.config['DATABASE_HOST'], app.config['DATABASE_PORT'])))
     db.init_app(app)
     app.register_blueprint(site)
     api_bp = _create_api_blueprint()

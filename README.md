@@ -5,14 +5,8 @@
 
 
 # features-webapp
-This a demo site based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python, Flask and KnockoutJs.
-This consist in a Knockout.js single page application and a Restful API with the following resources:
-
-* features : Information about a specific feature that a client requested (title, description, priority, target date, area, etc. )
-
-* clients: Client name and the relationsip to features
-
-* areas: Area name and the relationsip to features
+This a demo app based on [this requirements](https://github.com/IntuitiveWebSolutions/EngineeringMidLevel) built with Python, Flask and KnockoutJs.
+This consist in a Knockout.js single page application and a Restful API.
 
 This app can be started using docker or running the stand-alone service.
 
@@ -30,7 +24,7 @@ cd features-webapp/
 
 # Start the service with docker-compose (Recommended)
 
-* Install [docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/)
+* Install [docker](https://docs.docker.com/engine/installation/) and [docker-compose](https://docs.docker.com/compose/install/).
 
 * Execute the following commands:
 
@@ -43,9 +37,11 @@ This will initialize the containers (one with a postgreSQL database and another 
 
 * For demo purposes, you can seed the app with demo data. Just open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
 
-That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000)
+That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000).
 
-* To stop the containers
+Also, the API docs are located in here [http://localhost:5000/apidocs/](http://localhost:5000/apidocs/).
+
+* To stop the containers:
 
 ```shell
 sudo docker-compose down
@@ -53,14 +49,15 @@ sudo docker-compose down
 
 ## Running the tests inside a docker container
 
-* Execute the following commands to build the test images and run the tests
+* Execute the following commands to build the test images and run the tests.
 
 ```shell
 sudo docker-compose -f docker-compose.tests.yml -p ci build
 sudo docker-compose -f docker-compose.tests.yml -p ci run web-tests python -m pytest --cov=web/ tests --configfile=configtestdocker
 ```
 
-*That will print out the tests results and the code coverage. To stop the test images, run the following command
+* That will print out the tests results and a code coverage report.
+* To stop the test images, run the following command.
 
 ```shell
 sudo docker-compose down
@@ -68,14 +65,14 @@ sudo docker-compose down
 
 # Start the standalone service
 
-## Setup the PostgreSQL database
+## Setup a PostgreSQL database
 
-* Create a database in PostgreSQL, login as the default user (set "features" to your desired new db name)
+* Create a database in PostgreSQL, login as the default user (set "features" to your desired new db name).
 ```shell
 sudo -u postgres createdb features
 sudo -u postgres -i
 ```
-* Run the psql client and create a new user with a role to manage the new db. (set 'apiuser' to your user, 'password' to your password and 'features' to your database name)
+* Run the psql client and create a new user with a role to manage the new db. (set 'apiuser' to your user, 'password' to your password and 'features' to your database name).
 
 ```shell
 psql
@@ -85,9 +82,9 @@ GRANT ALL PRIVILEGES ON DATABASE features TO apiuser;
 ALTER USER apiuser CREATEDB;
 ```
 
-* Update the contents of config.py with the values for your database name, database user, database host. The current values are used for docker images
+* If you change any value, update the configuration in the config.py file with the values for your database name, user, password, host and port.
 
-* The app will initialize the schema by itself the first time it runs
+* The app will initialize the schema by itself the first time it runs.
 
 ### Running the service
 
@@ -98,17 +95,19 @@ pip install -r requirements.txt
 python app.py
 ```
 
-* Open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database with demo data (Take note on one of the user/password combinations that were printed out).
+* For demo purposes, you can seed the app with demo data. Just open [http://localhost:5000/admin/initialize_demo_data](http://localhost:5000/admin/initialize_demo_data) to seed the database (Take note on one of the user/password combinations that were printed out).
 
-That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000)
+That's it!, you can now login to the site with the previous credentials here [http://localhost:5000](http://localhost:5000).
+
+Also, the API docs are located in here [http://localhost:5000/apidocs/](http://localhost:5000/apidocs/).
 
 ## Running tests with the standalone service
 
-* First you need to setup a local database and update the config file with the values for your db name, user name, password and db hostname
+* First you need to setup a local database and update the config file with the values for your db name, user name, password and db hostname.
 
 ### Setting up the test database
 
-* Create a database in PostgreSQL, login as the default user (set 'test_mesages' to your desired new db name)
+* Create a database in PostgreSQL, login as the default user (set 'test_mesages' to your desired new db name).
 
 ```shell
 sudo -u postgres createdb 'test_features'
@@ -131,3 +130,5 @@ GRANT ALL PRIVILEGES ON DATABASE test_features TO apiuser;
 pip install pytest pytest-cov pytest-flask
 pytest --cov=web/ tests
 ```
+
+* That will print out the tests results and a code coverage report.

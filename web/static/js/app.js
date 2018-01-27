@@ -23,7 +23,8 @@ $(function () {
                 function (data, status) {
                     self.username(username);
                     toastr.success(username, 'Welcome!');
-                    location.hash = self.originalHash;
+                    if (self.originalHash != null)
+                        location.hash = self.originalHash;
                 },
                 function (error) {
                     toastr.error("Incorrect username or password");
@@ -45,8 +46,9 @@ $(function () {
                 currentPage = this.params.page.toLowerCase()
                 self.currentPage(currentPage);
                 // validate that we can only view the home page if we're not logged in
-                if (currentPage != "home" && !self.username()) {
+                if (currentPage != "home" && !self.username()) {                    
                     self.originalHash = location.hash;
+                    console.log(self.originalHash)
                     location.hash = "home";
                 } else {
                     switch (currentPage) {
@@ -526,6 +528,11 @@ $(function () {
         self.viewIsReady = ko.observable(true);
         self.buttonText = ko.observable();
         self.name = ko.observable();
+        self.pageSize = 5;
+        self.features = ko.observable();
+        self.page = ko.observable(1);
+        self.pages = ko.observableArray([]);
+        self.pendingDelete = null;
 
         self.show = ko.computed(function () {
             return navViewModel.currentPage() == "area";
@@ -534,15 +541,17 @@ $(function () {
         self.init = function (id) {
 
             if (id != null) {
-                self.buttonText("Update Area Request");
+                self.buttonText("Update Product Area");
                 self.id = id;
                 self.isUpdate = true;
+                getFeatures();
             } else {
-                self.buttonText("Add Area Request");
+                self.buttonText("Add Product Area");
                 self.isUpdate = false;
                 self.id = null;
                 self.name("");
                 self.viewIsReady(true);
+                self.features(null);
             }
 
             getArea();
@@ -610,6 +619,59 @@ $(function () {
                     self.viewIsReady(true);
                 });
         };
+
+        self.changePage = function (item) {
+            if (self.page() != item) {
+                self.page(item);
+                getFeatures();
+            }
+        };
+
+        self.isActivePage = function (index) {
+            return index == self.page();
+        };
+
+        self.showModalDelete = function (item) {
+            self.pendingDelete = item;
+            $('#featureDeleteModal').modal('show');
+        };
+
+        self.deleteFeature = function () {
+            self.viewIsReady(false);
+            $('#featureDeleteModal').modal('hide');
+            ahClient.delete(self.pendingDelete.url, {},
+                function (data, status) {
+                    toastr.success('Feature deleted');
+                    getFeatures();
+                },
+                function (error) {
+                    toastr.error("An error occurred when deleting the feature.");
+                    console.error(error);
+                    self.viewIsReady(true);
+                });
+        };
+
+        function getFeatures() {
+            self.viewIsReady(false);
+            ahClient.get("api/features/area/"+self.id, { "page": self.page(), "size": self.pageSize },
+                function (data, status) {
+                    self.features(data);
+                    self.pages.removeAll();
+                    n = Math.ceil(data.count / self.pageSize);
+                    for (var i = 1; i <= n; i++) {
+                        self.pages.push(i);
+                    }
+                    if (self.page() > n) {
+                        self.changePage(n);
+                    }
+                    self.viewIsReady(true);
+                },
+                function (error) {
+                    toastr.error("An error occurred when retrieving the features.");
+                    console.error(error);
+                    self.viewIsReady(true);
+                });
+        };
     };
 
     function ClientDetailViewModel() {
@@ -619,6 +681,11 @@ $(function () {
         self.viewIsReady = ko.observable(true);
         self.buttonText = ko.observable();
         self.name = ko.observable();
+        self.pageSize = 5;
+        self.features = ko.observable();
+        self.page = ko.observable(1);
+        self.pages = ko.observableArray([]);
+        self.pendingDelete = null;
 
         self.show = ko.computed(function () {
             return navViewModel.currentPage() == "client";
@@ -627,15 +694,17 @@ $(function () {
         self.init = function (id) {
 
             if (id != null) {
-                self.buttonText("Update Client Request");
+                self.buttonText("Update Product Client");
                 self.id = id;
                 self.isUpdate = true;
+                getFeatures();
             } else {
-                self.buttonText("Add Client Request");
+                self.buttonText("Add Product Client");
                 self.isUpdate = false;
                 self.id = null;
                 self.name("");
                 self.viewIsReady(true);
+                self.features(null);
             }
 
             getClient();
@@ -703,8 +772,61 @@ $(function () {
                     self.viewIsReady(true);
                 });
         };
-    };
 
+        self.changePage = function (item) {
+            if (self.page() != item) {
+                self.page(item);
+                getFeatures();
+            }
+        };
+
+        self.isActivePage = function (index) {
+            return index == self.page();
+        };
+
+        self.showModalDelete = function (item) {
+            self.pendingDelete = item;
+            $('#featureDeleteModal').modal('show');
+        };
+
+        self.deleteFeature = function () {
+            self.viewIsReady(false);
+            $('#featureDeleteModal').modal('hide');
+            ahClient.delete(self.pendingDelete.url, {},
+                function (data, status) {
+                    toastr.success('Feature deleted');
+                    getFeatures();
+                },
+                function (error) {
+                    toastr.error("An error occurred when deleting the feature.");
+                    console.error(error);
+                    self.viewIsReady(true);
+                });
+        };
+
+        function getFeatures() {
+            self.viewIsReady(false);
+            ahClient.get("api/features/client/"+self.id, { "page": self.page(), "size": self.pageSize },
+                function (data, status) {
+                    self.features(data);
+                    self.pages.removeAll();
+                    n = Math.ceil(data.count / self.pageSize);
+                    for (var i = 1; i <= n; i++) {
+                        self.pages.push(i);
+                    }
+                    if (self.page() > n) {
+                        self.changePage(n);
+                    }
+                    self.viewIsReady(true);
+                },
+                function (error) {
+                    toastr.error("An error occurred when retrieving the features.");
+                    console.error(error);
+                    self.viewIsReady(true);
+                });
+        };
+    };
+   
 
     // declare view models
     var navViewModel = new NavViewModel();

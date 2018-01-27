@@ -20,7 +20,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item" data-bind="css: { active: currentPage() == 'home' }">
                         <a class="nav-link" href="#">Home</a>
@@ -73,18 +73,18 @@
         </div>
         <div id="FeaturesViewModel">
             <div data-bind="if: show">
-                <h1>Feature Requests by client priority</h1>
+                <h1>Client's Features Requests</h1>
                 <div data-bind="ifnot: viewIsReady">
                     <div class="loading">Loading&#8230;</div>
                 </div>
                 <div data-bind="with: features">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Priority</th>
                                 <th scope="col">Title</th>
-                                <th scope="col">Client Name</th>                                
+                                <th scope="col">Client Name</th>
                                 <th scope="col">Target Date</th>
                                 <th scope="col">Product Area</th>
                                 <th scope="col">
@@ -104,7 +104,7 @@
                                 <td>
                                     <a data-bind="attr:{ href: '#client/'+$data.client.id }, text: client.name"></a>
                                 </td>
-                                
+
                                 <td data-bind="text: target_date"></td>
                                 <td>
                                     <a data-bind="attr:{ href: '#area/'+$data.area.id }, text: area.name"></a>
@@ -160,7 +160,7 @@
                     <div class="loading">Loading&#8230;</div>
                 </div>
                 <div data-bind="with: areas">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -230,11 +230,11 @@
                     <div class="loading">Loading&#8230;</div>
                 </div>
                 <div data-bind="with: clients">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-responsive">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Product Client</th>
+                                <th scope="col">Client</th>
                                 <th scope="col">
                                     <a class="btn btn-outline-primary btn-sm" href="#client/add">
                                         <i class="icon ion-plus-round"></i> Add</a>
@@ -297,7 +297,7 @@
             <div data-bind="if: show">
                 <div class="row">
                     <div class="col-md-8 offset-md-2">
-                        <h4 class="mb-3">Feature Request</h4>
+                        <h1 class="mb-3">Feature Request</h1>
                         <div data-bind="ifnot: viewIsReady">
                             <div class="loading">Loading&#8230;</div>
                         </div>
@@ -370,7 +370,7 @@
             <div data-bind="if: show">
                 <div class="row">
                     <div class="col-md-8 offset-md-2">
-                        <h4 class="mb-3">Product Area</h4>
+                        <h1>Product Area</h1>
                         <div data-bind="ifnot: viewIsReady">
                             <div class="loading">Loading&#8230;</div>
                         </div>
@@ -386,14 +386,88 @@
                         </form>
                     </div>
                 </div>
+                <br/>
+                <br/>
+                <div data-bind="if: features">
 
+                    <h3>Feature Requests in this product area</h3>
+                    <div data-bind="with: features">
+                        <table class="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Priority</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Client Name</th>
+                                    <th scope="col">Target Date</th>
+                                    <th scope="col">
+                                        <a class="btn btn-outline-primary btn-sm" href="#feature/add">
+                                            <i class="icon ion-plus-round"></i> Add</a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ko foreach: results -->
+                                <tr>
+                                    <th scope="row" data-bind="text: id"></th>
+                                    <td data-bind="text: client_priority"></td>
+                                    <td>
+                                        <a data-bind="attr:{ href: '#feature/'+$data.id }, text: title"></a>
+                                    </td>
+                                    <td>
+                                        <a data-bind="attr:{ href: '#client/'+$data.client.id }, text: client.name"></a>
+                                    </td>
+                                    <td data-bind="text: target_date"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bind="click: $root.showModalDelete">
+                                            <i class="icon ion-ios-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                            </tbody>
+                        </table>
+                        <p class="text-right">
+                            <strong>
+                                <span data-bind="text: count"></span> features in total
+                            </strong>
+                        </p>
+                    </div>
+
+                    <nav aria-label="Feature page navigation">
+                        <ul class="pagination justify-content-center" data-bind="foreach: pages">
+                            <li class="page-item" data-bind="css: {active: $data == $root.page()}">
+                                <button class="page-link" data-bind="text: $data,click: $root.changePage"></button>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div id="featureDeleteModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Feature</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this feature?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bind="click: deleteFeature">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="ClientDetailViewModel">
             <div data-bind="if: show">
                 <div class="row">
                     <div class="col-md-8 offset-md-2">
-                        <h4 class="mb-3">Product Client</h4>
+                        <h1>Client</h1>
                         <div data-bind="ifnot: viewIsReady">
                             <div class="loading">Loading&#8230;</div>
                         </div>
@@ -409,8 +483,92 @@
                         </form>
                     </div>
                 </div>
+                <br/>
+                <br/>
+                <div data-bind="if: features">
+
+                    <h3>Feature Requests in this client</h3>
+                    <div data-bind="with: features">
+                        <table class="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Priority</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Product Area</th>
+                                    <th scope="col">Target Date</th>
+                                    <th scope="col">
+                                        <a class="btn btn-outline-primary btn-sm" href="#feature/add">
+                                            <i class="icon ion-plus-round"></i> Add</a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- ko foreach: results -->
+                                <tr>
+                                    <th scope="row" data-bind="text: id"></th>
+                                    <td data-bind="text: client_priority"></td>
+                                    <td>
+                                        <a data-bind="attr:{ href: '#feature/'+$data.id }, text: title"></a>
+                                    </td>
+                                    <td>
+                                        <a data-bind="attr:{ href: '#area/'+$data.area.id }, text: area.name"></a>
+                                    </td>
+                                    <td data-bind="text: target_date"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bind="click: $root.showModalDelete">
+                                            <i class="icon ion-ios-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                            </tbody>
+                        </table>
+                        <p class="text-right">
+                            <strong>
+                                <span data-bind="text: count"></span> features in total
+                            </strong>
+                        </p>
+                    </div>
+
+                    <nav aria-label="Feature page navigation">
+                        <ul class="pagination justify-content-center" data-bind="foreach: pages">
+                            <li class="page-item" data-bind="css: {active: $data == $root.page()}">
+                                <button class="page-link" data-bind="text: $data,click: $root.changePage"></button>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div id="featureDeleteModal" class="modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Feature</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete this feature?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bind="click: deleteFeature">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
             </div>
         </div>
+
+
+
     </div>
     <footer class="container-fluid text-center">
     </footer>
